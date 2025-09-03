@@ -1,42 +1,28 @@
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
-
-public enum GameState { Shaking, Connecting }
 
 public class GameManager : MonoBehaviour
 {
-    public GameState currentState = GameState.Shaking;
-    public int maxShakeCount = 5;
+    public static GameManager Instance { get; private set; }
 
-    public LineDrawer lineDrawer;
+    public ConstellationData selectedConstellation;
+    public int totalShakes = 100;
 
-    private void Update()
+    void Awake()
     {
-        if (currentState == GameState.Shaking)
+        if (Instance != null)
         {
-            if (ShakenStarData.positions.Count >= maxShakeCount)
-            {
-                currentState = GameState.Connecting;
-                StartConnecting();
-            }
+            Destroy(gameObject);
+            return;
         }
+
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
     }
 
-    void StartConnecting()
+    public void SelectConstellation(ConstellationData constellation)
     {
-        lineDrawer.DrawLine(ShakenStarData.positions);
-        // 成功判定は即成功に簡略化
-        SaveConstellation();
+        selectedConstellation = constellation;
+        totalShakes = constellation.totalShakes;
     }
 
-    void SaveConstellation()
-    {
-        StarCollectionData.constellations.Add(
-            new StarConstellation2("MyConstellation", new List<Vector3>(ShakenStarData.positions))
-        );
-
-        // 次のシーンへ（ホームコレクション）
-        SceneManager.LoadScene("HomeScene");
-    }
 }

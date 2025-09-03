@@ -1,71 +1,98 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
-
-[System.Serializable]
-public class Constellation
-{
-    public string constellationName; // 星座名
-    public int maxCount;             // その星座で生成される最大数
-    public int starsToGenerate;      // 実際に生成される星の数
-}
+using DG.Tweening;
 
 public class ShakePhaseController : MonoBehaviour
 {
     [Header("References")]
-    [SerializeField] private CameraController cameraController;  // カメラ揺れ用
-    [SerializeField] private GameObject starPrefab;               // 星パーツPrefab
-    [SerializeField] private Transform spawnArea;                 // 星生成範囲
+    [SerializeField] private CameraController cameraController;
+    [SerializeField] private GameObject starPrefab;
 
-    [Header("Settings")]
-    [SerializeField] private Constellation constellation;         // 星座設定
+    private ConstellationData constellation;
+    private int totalShakes;
 
-    private bool hasGeneratedStars = false;  // 生成済みかどうか
+    private GameObject[] stars;
+    private bool hasGeneratedStars = false;
+    private int shakeCount = 0;
+    private int nextStarIndex = 0;
+
+    void Start()
+    {
+        // GameManager から取得
+        if (GameManager.Instance != null)
+        {
+            constellation = GameManager.Instance.selectedConstellation;
+            totalShakes = GameManager.Instance.totalShakes;
+        }
+
+        // 星をランダム生成
+        if (constellation != null && starPrefab != null)
+        {
+            int count = Mathf.Clamp(constellation.starsToGenerate, 0, constellation.maxCount);
+            stars = new GameObject[count];
+
+            for (int i = 0; i < count; i++)
+            {
+                Vector3 viewportPos = new Vector3(
+                    Random.Range(0f, 1f),
+                    Random.Range(0f, 1f),
+                    Mathf.Abs(Camera.main.transform.position.z)
+                );
+
+                Vector3 worldPos = Camera.main.ViewportToWorldPoint(viewportPos);
+                stars[i] = Instantiate(starPrefab, worldPos, Quaternion.identity);
+            }
+        }
+    }
 
     void Update()
     {
         bool shakeDetected = false;
 
-        // マウスクリック
         if (Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame)
             shakeDetected = true;
-
-        // スマホタッチ
         if (Touchscreen.current != null && Touchscreen.current.primaryTouch.press.wasPressedThisFrame)
             shakeDetected = true;
+        if (Keyboard.current != null && Keyboard.current.spaceKey.wasPressedThisFrame)
+            shakeDetected = true; // PCデバッグ用
 
         if (shakeDetected)
         {
-            // クリック／タップでカメラ揺れ
-            if (cameraController != null)
-                cameraController.Shake();
+            cameraController?.Shake();
 
-            // 星生成（まだ生成していなければ）
             if (!hasGeneratedStars)
             {
-                GenerateStars();
-                hasGeneratedStars = true;
+                hasGeneratedStars = true; // 星は Start() で生成済みの場合は無視
             }
+
+            HandleShake();
         }
     }
 
-    private void GenerateStars()
+    private void HandleShake()
     {
-        if (constellation == null || starPrefab == null || spawnArea == null)
+        if (stars == null || stars.Length == 0)
             return;
 
-        int count = Mathf.Clamp(constellation.starsToGenerate, 0, constellation.maxCount);
+        shakeCount++;
+        int shakesPerStar = totalShakes / stars.Length;
 
-        for (int i = 0; i < count; i++)
+        if (shakeCount % shakesPerStar == 0 && nextStarIndex < stars.Length)
         {
-            Vector3 spawnPos = new Vector3(
-                Random.Range(-spawnArea.localScale.x / 2f, spawnArea.localScale.x / 2f),
-                Random.Range(-spawnArea.localScale.y / 2f, spawnArea.localScale.y / 2f),
-                0f
-            );
-
-            Instantiate(starPrefab, spawnArea.position + spawnPos, Quaternion.identity);
+            MoveStarToHome(nextStarIndex);
+            nextStarIndex++;
         }
+    }
 
-        Debug.Log($"星座「{constellation.constellationName}」の星を{count}個生成");
+    private void MoveStarToHome(int index)
+    {
+        Vector2 normalized = constellation.starsNormalized[index];
+        Vector3 worldPos = Camera.main.ViewportToWorldPoint(new Vector3(
+            normalized.x,
+            normalized.y,
+            Mathf.Abs(Camera.main.transform.position.z)
+        ));
+
+        stars[index].transform.DOMove(worldPos, 1f).SetEase(Ease.OutQuad);
     }
 }

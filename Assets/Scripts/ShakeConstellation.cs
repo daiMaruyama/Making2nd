@@ -4,7 +4,7 @@ using DG.Tweening;
 public class ShakeConstellation : MonoBehaviour
 {
     [SerializeField] GameObject starPrefab;
-    [SerializeField] Transform[] homePositions; // 星座の正しい位置（Emptyを並べておく）
+    [SerializeField] ConstellationData constellationData; // ScriptableObjectをアタッチ
     [SerializeField] int totalShakes = 100;
 
     private GameObject[] stars;
@@ -13,40 +13,47 @@ public class ShakeConstellation : MonoBehaviour
 
     void Start()
     {
-        stars = new GameObject[homePositions.Length];
+        int starCount = stars.Length;
+        stars = new GameObject[starCount];
 
-        // ランダムな位置に星を配置
-        for (int i = 0; i < homePositions.Length; i++)
+        // ランダム位置に星を生成
+        for (int i = 0; i < starCount; i++)
         {
-            Vector2 randomPos = new Vector2(
-                Random.Range(-5f, 5f),
-                Random.Range(-8f, 8f)
-            );
-
-            stars[i] = Instantiate(starPrefab, randomPos, Quaternion.identity, transform);
+            stars[i] = Instantiate(starPrefab, GetRandomStartPos(), Quaternion.identity, transform);
         }
     }
 
-    // 外部から「振った」と呼ぶ
     public void OnShake()
     {
         shakeCount++;
+        int shakesPerStar = totalShakes / stars.Length;
 
-        int shakesPerStar = totalShakes / homePositions.Length;
-
-        // 一定回数振るごとに星を正しい位置に移動
         if (shakeCount % shakesPerStar == 0 && nextStarIndex < stars.Length)
         {
-            MoveStarToHome(nextStarIndex);
+            //MoveStarToHome(nextStarIndex);
             nextStarIndex++;
         }
     }
 
-    void MoveStarToHome(int index)
+    Vector3 GetRandomStartPos()
     {
-        stars[index].transform.DOMove(
-            homePositions[index].position,
-            1f
-        ).SetEase(Ease.OutQuad);
+        Vector3 viewportPos = new Vector3(
+            Random.Range(0f, 1f),
+            Random.Range(0f, 1f),
+            Mathf.Abs(Camera.main.transform.position.z)
+        );
+        return Camera.main.ViewportToWorldPoint(viewportPos);
     }
+
+    /*void MoveStarToHome(int index)
+    {
+        Vector2 normalized 
+        Vector3 worldPos = Camera.main.ViewportToWorldPoint(new Vector3(
+            normalized.x,
+            normalized.y,
+            Mathf.Abs(Camera.main.transform.position.z)
+        ));
+
+        stars[index].transform.DOMove(worldPos, 1f).SetEase(Ease.OutQuad);
+    }*/
 }
