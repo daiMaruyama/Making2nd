@@ -13,6 +13,15 @@ MonoBehaviour:
   m_Name: BigDipper
   m_EditorClassIdentifier: 
   constellationName: 
-  starsNormalized: []
-  starsToGenerate: 0
-  maxCount: 0
+  starsNormalized:
+  - {x: 0, y: 0}
+  - {x: 0, y: 0}
+  - {x: 0, y: 0}
+  - {x: 0, y: 0}
+  - {x: 0, y: 0}
+  - {x: 0, y: 0}
+  - {x: 0, y: 0}
+  - {x: 0, y: 0}
+  totalShakes: 100
+  maxCount: 8
+  starsToGenerate: 8
