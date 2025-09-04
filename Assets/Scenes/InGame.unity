@@ -449,7 +449,7 @@ GameObject:
   - component: {fileID: 1605325326}
   - component: {fileID: 1605325325}
   m_Layer: 0
-  m_Name: GameManager
+  m_Name: DebugManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -467,8 +467,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c567d661aa1ff348afb742f2b3475f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  selectedConstellation: {fileID: 0}
-  totalShakes: 100
+  selectedConstellation: {fileID: 11400000, guid: 909764ef783262e4283af962e71c6ed3, type: 2}
+  totalShakes: 15
 --- !u!4 &1605325326
 Transform:
   m_ObjectHideFlags: 0
@@ -558,7 +558,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7381959107027355205, guid: 145b931b76894d146b806e1913722148, type: 3}
       propertyPath: InitialModule.maxNumParticles
-      value: 2200
+      value: 1500
       objectReference: {fileID: 0}
     - target: {fileID: 7381959107027355205, guid: 145b931b76894d146b806e1913722148, type: 3}
       propertyPath: InitialModule.startSize.scalar

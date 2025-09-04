@@ -13,13 +13,12 @@ MonoBehaviour:
   m_Name: Cassippeia
   m_EditorClassIdentifier: 
   constellationName: Cassiopeia
-  starPositions: []
   starsNormalized:
-  - {x: 0.2, y: 0.7}
-  - {x: 0.3, y: 0.5}
-  - {x: 0.5, y: 0.45}
-  - {x: 0.6, y: 0.3}
-  - {x: 0.7, y: 0.47}
+  - {x: 0.175, y: 0.8}
+  - {x: 0.35, y: 0.575}
+  - {x: 0.52, y: 0.6}
+  - {x: 0.625, y: 0.4}
+  - {x: 0.8, y: 0.535}
   totalShakes: 15
   maxCount: 5
   starsToGenerate: 5
