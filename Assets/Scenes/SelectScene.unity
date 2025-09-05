@@ -132,6 +132,7 @@ GameObject:
   - component: {fileID: 693537872}
   - component: {fileID: 693537871}
   - component: {fileID: 693537870}
+  - component: {fileID: 693537874}
   m_Layer: 5
   m_Name: Button
   m_TagString: Untagged
@@ -171,8 +172,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 79895cce8322ef84082fc1b573b83b80, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cassiopeia: {fileID: 11400000, guid: 909764ef783262e4283af962e71c6ed3, type: 2}
-  bigDipper: {fileID: 11400000, guid: cc29bc4d990d5104589a5003a12e0bc5, type: 2}
+  constellation: {fileID: 11400000, guid: 909764ef783262e4283af962e71c6ed3, type: 2}
+  panel: {fileID: 693537872}
+  sceneName: InGame
 --- !u!114 &693537871
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -219,7 +221,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 693537870}
         m_TargetAssemblyTypeName: SelectionUI, Assembly-CSharp
-        m_MethodName: OnSelectCassiopeia
+        m_MethodName: OnSelect
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -267,6 +269,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 693537868}
   m_CullTransparentMesh: 1
+--- !u!114 &693537874
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 693537868}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 78ed4bf80e313e045a90053da8ee3745, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  panelImage: {fileID: 0}
+  hoverScale: 1.2
+  hoverColor: {r: 1, g: 1, b: 1, a: 1}
+  tweenTime: 0.3
 --- !u!1 &775781172
 GameObject:
   m_ObjectHideFlags: 0
