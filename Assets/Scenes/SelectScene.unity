@@ -283,8 +283,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   panelImage: {fileID: 0}
   hoverScale: 1.2
-  hoverColor: {r: 1, g: 1, b: 1, a: 1}
-  tweenTime: 0.3
+  hoverColor: {r: 0.6418867, g: 0.9169811, b: 0.8194328, a: 1}
+  tweenTime: 0.5
 --- !u!1 &775781172
 GameObject:
   m_ObjectHideFlags: 0
