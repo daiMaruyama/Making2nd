@@ -1,11 +1,12 @@
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
+using TMPro;
 
 public class TutorialTextController : MonoBehaviour
 {
     [Header("UI References")]
-    [SerializeField] private Text messageText;
+    [SerializeField] private TextMeshProUGUI messageText;
 
     [Header("Appear Animation")]
     [SerializeField] private float appearTime = 0.4f;   // èoåªÉAÉjÉÅÇÃéûä‘
@@ -21,7 +22,7 @@ public class TutorialTextController : MonoBehaviour
     private void Awake()
     {
         if (messageText == null)
-            messageText = GetComponent<Text>();
+            messageText = GetComponent<TextMeshProUGUI>();
 
         ResetText();
     }
