@@ -24,7 +24,7 @@ public class SelectionUI : MonoBehaviour
         // ‰‰o ¨ ƒV[ƒ“‘JˆÚ
         Sequence seq = DOTween.Sequence();
         seq.Append(panel.transform.DOScale(1.2f, 0.3f).SetEase(Ease.OutBack));
-        seq.Join(panel.DOFade(0f, 0.3f));
+        seq.Join(panel.DOFade(0f, 1.0f));
         seq.OnComplete(() =>
         {
             SceneManager.LoadScene(sceneName);
