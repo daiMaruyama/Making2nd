@@ -8,7 +8,7 @@ public class TutorialExample : MonoBehaviour
     private void Start()
     {
         // ƒ^ƒCƒgƒ‹
-        tutorial.ShowMessage("Press Any Button");
+        tutorial.ShowMessage(" Press Any Button ");
     }
 
     private void Update()
