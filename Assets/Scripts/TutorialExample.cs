@@ -7,8 +7,7 @@ public class TutorialExample : MonoBehaviour
 
     private void Start()
     {
-        // タイトル
-        tutorial.ShowMessage(" Press Any Button ");
+        tutorial.ShowMessage(" 画面をタップしてください ");
     }
 
     private void Update()
@@ -18,7 +17,6 @@ public class TutorialExample : MonoBehaviour
             Touchscreen.current?.primaryTouch.press.wasPressedThisFrame == true)
         {
             tutorial.HideMessage();
-            // tutorial.ShowMessage("振れ！");
         }
     }
 }

@@ -323,10 +323,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1112735591}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 7.5, y: -90.4}
-  m_SizeDelta: {x: 323.38, y: 41.7971}
+  m_AnchorMin: {x: 0.5, y: 0}
+  m_AnchorMax: {x: 0.5, y: 0}
+  m_AnchoredPosition: {x: 7.5, y: 52.96}
+  m_SizeDelta: {x: 323.38, y: 41.797104}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &554456087
 MonoBehaviour:
@@ -371,8 +371,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4282948848
-  m_fontColor: {r: 0.93962264, g: 0.61055344, b: 0.2818867, a: 1}
+    rgba: 4278190080
+  m_fontColor: {r: 0, g: 0, b: 0, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:

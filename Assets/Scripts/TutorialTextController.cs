@@ -59,7 +59,7 @@ public class TutorialTextController : MonoBehaviour
         blinkTween?.Kill();
         showSequence?.Kill();
 
-        messageText.DOFade(0f, 0.3f).OnComplete(ResetText);
+        messageText.DOFade(0f, 1f).OnComplete(ResetText);
     }
 
     private void ResetText()
