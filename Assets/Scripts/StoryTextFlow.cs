@@ -10,12 +10,22 @@ public class StoryTextFlow : MonoBehaviour
     [SerializeField] private string nextSceneName;
 
     private string[] storyLines =
-    {
-        "天の川を隔てて会えない織姫と彦星。",
-        "年に一度だけ天の川が消滅する。",
-        "彼らは猛スピードで会いに行くが……",
-        "どちらの想いが強いのか！？"
-    };
+{
+    "かつて働き者だった織姫と彦星。",
+    "結婚後は……まさかのニート化！",
+
+    "怒った天帝は2人を天の川の両岸へ。",
+    "しかし情けをかけ、年に一度だけ再会を許した。",
+
+    "毎年、涙の再会を果たす2人。",
+    "……だが今年はひと味違う！",
+
+    "天の川の真ん中に",
+    "先に着いた方こそ、本当に想いが強い！？",
+
+    "愛か？ 努力か？ はたまた根性か！？",
+    "いざ、勝負！"
+};
 
     private int currentLine = 0;
     private bool isTyping = false;

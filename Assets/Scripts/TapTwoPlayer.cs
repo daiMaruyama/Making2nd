@@ -26,7 +26,6 @@ public class TapTwoPlayer : MonoBehaviour
         HandlePCInput();
         HandleMobileInput();
 
-        // 勝敗判定
         if (_player1Count >= _limitCount)
         {
             FinishGame(1);
@@ -37,11 +36,11 @@ public class TapTwoPlayer : MonoBehaviour
         }
     }
 
-    // PC入力
-
     private void HandlePCInput()
     {
-        // Player1 キー群
+        if (Keyboard.current == null) return;
+
+        // Player1
         if (Keyboard.current.qKey.wasPressedThisFrame ||
             Keyboard.current.aKey.wasPressedThisFrame ||
             Keyboard.current.zKey.wasPressedThisFrame ||
@@ -53,24 +52,24 @@ public class TapTwoPlayer : MonoBehaviour
             Keyboard.current.cKey.wasPressedThisFrame)
         {
             _player1Count++;
+            Debug.Log("<color=red>" + _player1Count + "回" + "</color>");
         }
 
-        // Player2 キー群
+        // Player2
         if (Keyboard.current.iKey.wasPressedThisFrame ||
             Keyboard.current.kKey.wasPressedThisFrame ||
             Keyboard.current.oKey.wasPressedThisFrame ||
             Keyboard.current.lKey.wasPressedThisFrame ||
             Keyboard.current.pKey.wasPressedThisFrame ||
-            Keyboard.current.semicolonKey.wasPressedThisFrame ||  // 「＋？」キーが環境依存なのでセミコロンに仮設定
+            Keyboard.current.semicolonKey.wasPressedThisFrame ||
             Keyboard.current.commaKey.wasPressedThisFrame ||
             Keyboard.current.periodKey.wasPressedThisFrame ||
             Keyboard.current.slashKey.wasPressedThisFrame)
         {
             _player2Count++;
+            Debug.Log(_player2Count + "回");
         }
     }
-
-    // スマホ入力（左右判定）
 
     private void HandleMobileInput()
     {
@@ -81,13 +80,9 @@ public class TapTwoPlayer : MonoBehaviour
             Vector2 pos = Touchscreen.current.primaryTouch.position.ReadValue();
 
             if (pos.x < Screen.width / 2)
-            {
                 _player1Count++;
-            }
             else
-            {
                 _player2Count++;
-            }
         }
     }
 
@@ -96,9 +91,7 @@ public class TapTwoPlayer : MonoBehaviour
         _isRunning = false;
         float totalTime = Time.time - _startTime;
 
-        Debug.Log($"Player {winner} wins! Time: {totalTime:F2}s | P1:{_player1Count}, P2:{_player2Count}");
-
-        // TODO: リザルト画面に遷移し、勝敗と結果を表示
-        // 例: SceneManager.LoadScene("ResultScene");
+        // GameResultManager に結果を渡す
+        GameResultManager.Instance.SetResult(winner, totalTime, _player1Count, _player2Count);
     }
 }
