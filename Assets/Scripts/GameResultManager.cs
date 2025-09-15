@@ -6,7 +6,6 @@ public class GameResultManager : MonoBehaviour
     public static GameResultManager Instance { get; private set; }
 
     private int _winner;
-    private float _time;
     private int _p1Count;
     private int _p2Count;
 
@@ -24,15 +23,15 @@ public class GameResultManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
-    public void SetResult(int winner, float time, int p1, int p2)
+    public void SetResult(int winner, int p1, int p2)
     {
         _winner = winner;
-        _time = time;
         _p1Count = p1;
         _p2Count = p2;
 
-        // ランキング保存
-        SaveRecord(time);
+        // ランキング保存（勝者のスコアを保存）
+        int scoreToSave = (winner == 1) ? _p1Count : (winner == 2 ? _p2Count : Mathf.Max(_p1Count, _p2Count));
+        SaveRecord(scoreToSave);
 
         // Finish演出表示
         FinishUIController.Instance?.ShowFinish(winner);
@@ -41,27 +40,27 @@ public class GameResultManager : MonoBehaviour
         Invoke(nameof(GoToResultScene), delayBeforeSceneChange);
     }
 
-    private void SaveRecord(float newTime)
+    private void SaveRecord(int newScore)
     {
         const int MaxRank = 5;
 
         // 既存のランキングを取得
-        float[] times = new float[MaxRank];
+        int[] scores = new int[MaxRank];
         for (int i = 0; i < MaxRank; i++)
         {
-            times[i] = PlayerPrefs.GetFloat($"BestTime{i}", float.MaxValue);
+            scores[i] = PlayerPrefs.GetInt($"BestScore{i}", 0);
         }
 
-        // 新記録を挿入
+        // 新記録を挿入（降順：スコア大きいほど上）
         for (int i = 0; i < MaxRank; i++)
         {
-            if (newTime < times[i])
+            if (newScore > scores[i])
             {
                 for (int j = MaxRank - 1; j > i; j--)
                 {
-                    times[j] = times[j - 1];
+                    scores[j] = scores[j - 1];
                 }
-                times[i] = newTime;
+                scores[i] = newScore;
                 break;
             }
         }
@@ -69,7 +68,7 @@ public class GameResultManager : MonoBehaviour
         // 保存
         for (int i = 0; i < MaxRank; i++)
         {
-            PlayerPrefs.SetFloat($"BestTime{i}", times[i]);
+            PlayerPrefs.SetInt($"BestScore{i}", scores[i]);
         }
 
         PlayerPrefs.Save();
@@ -81,8 +80,8 @@ public class GameResultManager : MonoBehaviour
     }
 
     // ResultScene で呼ぶ用
-    public (int winner, float time, int p1, int p2) GetResult()
+    public (int winner, int p1, int p2) GetResult()
     {
-        return (_winner, _time, _p1Count, _p2Count);
+        return (_winner, _p1Count, _p2Count);
     }
 }

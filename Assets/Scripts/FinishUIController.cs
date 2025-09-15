@@ -16,7 +16,11 @@ public class FinishUIController : MonoBehaviour
 
     public void ShowFinish(int winner)
     {
-        finishText.text = $"FINISH!\nPlayer {winner} Wins!";
+        if (winner == 0)
+            finishText.text = "FINISH!\nDraw!";
+        else
+            finishText.text = $"FINISH!\nPlayer {winner} Wins!";
+
         finishText.alpha = 0;
 
         finishText.DOFade(1f, 1f).SetEase(Ease.OutQuad);

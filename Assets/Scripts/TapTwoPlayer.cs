@@ -3,7 +3,9 @@ using UnityEngine.InputSystem;
 
 public class TapTwoPlayer : MonoBehaviour
 {
-    [SerializeField] private int _limitCount = 50; // 規定回数
+    public static TapTwoPlayer Instance { get; private set; }
+
+    [SerializeField] private float _limitTime = 5f; // 制限時間
 
     private int _player1Count = 0;
     private int _player2Count = 0;
@@ -11,12 +13,25 @@ public class TapTwoPlayer : MonoBehaviour
     private float _startTime;
     private bool _isRunning = false;
 
+    private void Awake()
+    {
+        Instance = this;
+    }
+
     private void Start()
     {
         _player1Count = 0;
         _player2Count = 0;
-        _isRunning = true;
+        _isRunning = false;
+
+        // ゲーム開始前カウントダウン
+        StartCoroutine(GameUIController.Instance.StartCountdown());
+    }
+
+    public void StartGame()
+    {
         _startTime = Time.time;
+        _isRunning = true;
     }
 
     private void Update()
@@ -26,13 +41,28 @@ public class TapTwoPlayer : MonoBehaviour
         HandlePCInput();
         HandleMobileInput();
 
-        if (_player1Count >= _limitCount)
+        float elapsed = Time.time - _startTime;
+        float remaining = Mathf.Max(0, _limitTime - elapsed);
+
+        // 右上に常時表示
+        GameUIController.Instance.UpdateTimer(remaining);
+
+        // 中央にカウント演出 (5,4,3...)
+        if (remaining > 0)
         {
-            FinishGame(1);
+            GameUIController.Instance.UpdateTimer(remaining);
         }
-        else if (_player2Count >= _limitCount)
+        else
         {
-            FinishGame(2);
+            _isRunning = false;
+
+            // 真ん中に TimeUp! を出す
+            GameUIController.Instance.ShowTimeUp();
+
+            int winner = (_player1Count == _player2Count) ? 0 :
+                         (_player1Count > _player2Count ? 1 : 2);
+
+            FinishGame(winner);
         }
     }
 
@@ -40,34 +70,18 @@ public class TapTwoPlayer : MonoBehaviour
     {
         if (Keyboard.current == null) return;
 
-        // Player1
-        if (Keyboard.current.qKey.wasPressedThisFrame ||
-            Keyboard.current.aKey.wasPressedThisFrame ||
-            Keyboard.current.zKey.wasPressedThisFrame ||
-            Keyboard.current.wKey.wasPressedThisFrame ||
-            Keyboard.current.sKey.wasPressedThisFrame ||
-            Keyboard.current.xKey.wasPressedThisFrame ||
-            Keyboard.current.eKey.wasPressedThisFrame ||
-            Keyboard.current.dKey.wasPressedThisFrame ||
-            Keyboard.current.cKey.wasPressedThisFrame)
+        // Player1: A/D
+        if (Keyboard.current.aKey.wasPressedThisFrame || Keyboard.current.dKey.wasPressedThisFrame)
         {
             _player1Count++;
-            Debug.Log("<color=red>" + _player1Count + "回" + "</color>");
+            Debug.Log($"<color=red>P1 {_player1Count}回</color>");
         }
 
-        // Player2
-        if (Keyboard.current.iKey.wasPressedThisFrame ||
-            Keyboard.current.kKey.wasPressedThisFrame ||
-            Keyboard.current.oKey.wasPressedThisFrame ||
-            Keyboard.current.lKey.wasPressedThisFrame ||
-            Keyboard.current.pKey.wasPressedThisFrame ||
-            Keyboard.current.semicolonKey.wasPressedThisFrame ||
-            Keyboard.current.commaKey.wasPressedThisFrame ||
-            Keyboard.current.periodKey.wasPressedThisFrame ||
-            Keyboard.current.slashKey.wasPressedThisFrame)
+        // Player2: J/L
+        if (Keyboard.current.jKey.wasPressedThisFrame || Keyboard.current.lKey.wasPressedThisFrame)
         {
             _player2Count++;
-            Debug.Log(_player2Count + "回");
+            Debug.Log($"<color=blue>P2 {_player2Count}回</color>");
         }
     }
 
@@ -80,18 +94,20 @@ public class TapTwoPlayer : MonoBehaviour
             Vector2 pos = Touchscreen.current.primaryTouch.position.ReadValue();
 
             if (pos.x < Screen.width / 2)
+            {
                 _player1Count++;
+                Debug.Log($"<color=red>P1 {_player1Count}回</color>");
+            }
             else
+            {
                 _player2Count++;
+                Debug.Log($"<color=blue>P2 {_player2Count}回</color>");
+            }
         }
     }
 
     private void FinishGame(int winner)
     {
-        _isRunning = false;
-        float totalTime = Time.time - _startTime;
-
-        // GameResultManager に結果を渡す
-        GameResultManager.Instance.SetResult(winner, totalTime, _player1Count, _player2Count);
+        GameResultManager.Instance.SetResult(winner, _player1Count, _player2Count);
     }
 }
