@@ -5,7 +5,8 @@ public class TapTwoPlayer : MonoBehaviour
 {
     public static TapTwoPlayer Instance { get; private set; }
 
-    [SerializeField] private float _limitTime = 5f; // 制限時間
+    public int targetTapCount = 20; // 規定回数
+    [SerializeField] private float limitTime = 10f;   // 制限時間
 
     private int _player1Count = 0;
     private int _player2Count = 0;
@@ -24,8 +25,21 @@ public class TapTwoPlayer : MonoBehaviour
         _player2Count = 0;
         _isRunning = false;
 
-        // ゲーム開始前カウントダウン
-        StartCoroutine(GameUIController.Instance.StartCountdown());
+        // 最初は残り回数非表示
+        // GameUIController.Instance?.UpdateTapCount(targetTapCount, targetTapCount); ←削除
+
+        // カウントダウン開始
+        if (GameUIController.Instance != null)
+            StartCoroutine(GameUIController.Instance.StartCountdown());
+        else
+            StartGame(); // UIがない場合は直接開始
+    }
+
+    // GameUIController がない場合のフォールバック
+    private System.Collections.IEnumerator DummyCountdown()
+    {
+        yield return null;
+        StartGame();
     }
 
     public void StartGame()
@@ -39,30 +53,27 @@ public class TapTwoPlayer : MonoBehaviour
         if (!_isRunning) return;
 
         HandlePCInput();
-        HandleMobileInput();
 
         float elapsed = Time.time - _startTime;
-        float remaining = Mathf.Max(0, _limitTime - elapsed);
 
-        // 右上に常時表示
-        GameUIController.Instance.UpdateTimer(remaining);
+        // 左上タイマー（0.00s形式）
+        GameUIController.Instance?.UpdateTimer(elapsed);
 
-        // 中央にカウント演出 (5,4,3...)
-        if (remaining > 0)
+        // 勝利条件チェック（先に規定回数に達した方が勝ち）
+        if (_player1Count >= targetTapCount)
         {
-            GameUIController.Instance.UpdateTimer(remaining);
+            FinishGame(1, elapsed);
         }
-        else
+        else if (_player2Count >= targetTapCount)
         {
+            FinishGame(2, elapsed);
+        }
+        else if (elapsed >= limitTime)
+        {
+            // 時間切れ。インゲームでは TimeUp 表示だけ（勝者表示はしない）
             _isRunning = false;
-
-            // 真ん中に TimeUp! を出す
-            GameUIController.Instance.ShowTimeUp();
-
-            int winner = (_player1Count == _player2Count) ? 0 :
-                         (_player1Count > _player2Count ? 1 : 2);
-
-            FinishGame(winner);
+            GameUIController.Instance?.ShowTimeUp();
+            FinishGame(0, elapsed); // 引き分け扱い
         }
     }
 
@@ -70,44 +81,35 @@ public class TapTwoPlayer : MonoBehaviour
     {
         if (Keyboard.current == null) return;
 
-        // Player1: A/D
         if (Keyboard.current.aKey.wasPressedThisFrame || Keyboard.current.dKey.wasPressedThisFrame)
         {
             _player1Count++;
-            Debug.Log($"<color=red>P1 {_player1Count}回</color>");
+            UpdateTapUI();
         }
 
-        // Player2: J/L
         if (Keyboard.current.jKey.wasPressedThisFrame || Keyboard.current.lKey.wasPressedThisFrame)
         {
             _player2Count++;
-            Debug.Log($"<color=blue>P2 {_player2Count}回</color>");
+            UpdateTapUI();
         }
     }
 
-    private void HandleMobileInput()
+
+    private void UpdateTapUI()
     {
-        if (Touchscreen.current == null) return;
+        int p1Remaining = Mathf.Max(0, targetTapCount - _player1Count);
+        int p2Remaining = Mathf.Max(0, targetTapCount - _player2Count);
 
-        if (Touchscreen.current.primaryTouch.press.wasPressedThisFrame)
-        {
-            Vector2 pos = Touchscreen.current.primaryTouch.position.ReadValue();
-
-            if (pos.x < Screen.width / 2)
-            {
-                _player1Count++;
-                Debug.Log($"<color=red>P1 {_player1Count}回</color>");
-            }
-            else
-            {
-                _player2Count++;
-                Debug.Log($"<color=blue>P2 {_player2Count}回</color>");
-            }
-        }
+        GameUIController.Instance.UpdateTapCount(p1Remaining, p2Remaining);
     }
 
-    private void FinishGame(int winner)
+
+    private void FinishGame(int winner, float time)
     {
-        GameResultManager.Instance.SetResult(winner, _player1Count, _player2Count);
+        if (!_isRunning) return; // 二重呼び出し防止
+        _isRunning = false;
+
+        // 結果を渡す（勝者の到達タイムのみがランキング対象）
+        GameResultManager.Instance.SetResult(winner, _player1Count, _player2Count, time);
     }
 }

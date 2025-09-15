@@ -8,9 +8,14 @@ public class GameResultManager : MonoBehaviour
     private int _winner;
     private int _p1Count;
     private int _p2Count;
+    private float _clearTime;
 
-    [SerializeField] private float delayBeforeSceneChange = 3f; // シリアライズで設定
-    [SerializeField] string sceneName;
+    [SerializeField] private float delayBeforeSceneChange = 3f;
+    [SerializeField] private string sceneName;
+
+    // ランキング更新フラグ（ResultSceneが参照）
+    private bool _lastWasNewRecord = false;
+    private int _lastNewRecordIndex = -1;
 
     private void Awake()
     {
@@ -23,65 +28,97 @@ public class GameResultManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
-    public void SetResult(int winner, int p1, int p2)
+    /// <summary>
+    /// winner: 0 = draw, 1 = P1, 2 = P2
+    /// </summary>
+    public void SetResult(int winner, int p1, int p2, float time)
     {
         _winner = winner;
         _p1Count = p1;
         _p2Count = p2;
+        _clearTime = time;
 
-        // ランキング保存（勝者のスコアを保存）
-        int scoreToSave = (winner == 1) ? _p1Count : (winner == 2 ? _p2Count : Mathf.Max(_p1Count, _p2Count));
-        SaveRecord(scoreToSave);
+        // Reset flags
+        _lastWasNewRecord = false;
+        _lastNewRecordIndex = -1;
 
-        // Finish演出表示
-        FinishUIController.Instance?.ShowFinish(winner);
+        // 勝者がいる場合のみランキング判定（速さが指標）
+        if (winner == 1 || winner == 2)
+        {
+            SaveRecord(time);
+        }
 
-        // 数秒後に遷移
+        // ※ インゲームでは勝者演出は行わない（ResultScene で表示するため）
+        // ResultScene へ遷移
         Invoke(nameof(GoToResultScene), delayBeforeSceneChange);
     }
 
-    private void SaveRecord(int newScore)
+    private void SaveRecord(float newTime)
     {
         const int MaxRank = 5;
 
-        // 既存のランキングを取得
-        int[] scores = new int[MaxRank];
+        float[] times = new float[MaxRank];
         for (int i = 0; i < MaxRank; i++)
         {
-            scores[i] = PlayerPrefs.GetInt($"BestScore{i}", 0);
+            times[i] = PlayerPrefs.GetFloat($"BestTime{i}", float.MaxValue);
         }
 
-        // 新記録を挿入（降順：スコア大きいほど上）
+        // 挿入位置を探す（小さいタイムが上位）
+        int insertIndex = -1;
         for (int i = 0; i < MaxRank; i++)
         {
-            if (newScore > scores[i])
+            if (newTime < times[i])
             {
-                for (int j = MaxRank - 1; j > i; j--)
-                {
-                    scores[j] = scores[j - 1];
-                }
-                scores[i] = newScore;
+                insertIndex = i;
                 break;
             }
         }
 
-        // 保存
-        for (int i = 0; i < MaxRank; i++)
+        if (insertIndex != -1)
         {
-            PlayerPrefs.SetInt($"BestScore{i}", scores[i]);
-        }
+            // 挿入して後ろをシフト
+            for (int j = MaxRank - 1; j > insertIndex; j--)
+            {
+                times[j] = times[j - 1];
+            }
+            times[insertIndex] = newTime;
 
-        PlayerPrefs.Save();
+            // 保存
+            for (int i = 0; i < MaxRank; i++)
+            {
+                PlayerPrefs.SetFloat($"BestTime{i}", times[i]);
+            }
+            PlayerPrefs.Save();
+
+            // フラグをセット（ResultScene で名前入力などを行うため）
+            _lastWasNewRecord = true;
+            _lastNewRecordIndex = insertIndex;
+        }
+        else
+        {
+            // 新記録に入らなかった場合は何もしない（既存のランキング保持）
+            _lastWasNewRecord = false;
+            _lastNewRecordIndex = -1;
+        }
     }
 
     private void GoToResultScene()
     {
+        if (string.IsNullOrEmpty(sceneName))
+        {
+            Debug.LogWarning("GameResultManager: sceneName is not set.");
+            return;
+        }
         SceneManager.LoadScene(sceneName);
     }
 
-    // ResultScene で呼ぶ用
-    public (int winner, int p1, int p2) GetResult()
+    // ResultScene から呼べる getter
+    public (int winner, int p1, int p2, float time) GetResult()
     {
-        return (_winner, _p1Count, _p2Count);
+        return (_winner, _p1Count, _p2Count, _clearTime);
     }
+
+    // ResultScene が参照して「名前入力が必要か」を確認するためのAPI
+    public bool LastResultWasNewRecord() => _lastWasNewRecord;
+    public int GetLastNewRecordIndex() => _lastNewRecordIndex;
 }

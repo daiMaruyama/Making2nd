@@ -10029,10 +10029,10 @@ MonoBehaviour:
   centerText: {fileID: 1728837297}
   rightText: {fileID: 1727057544}
   fadeDuration: 1
-  delayBetween: 0.5
-  leftOffset: {x: 0, y: 0, z: 0}
-  centerOffset: {x: 0, y: 0, z: 0}
-  rightOffset: {x: 0, y: 0, z: 0}
+  delayBetween: 0.1
+  leftOffset: {x: 0, y: 0, z: -150}
+  centerOffset: {x: 0, y: 99.13, z: -10.43}
+  rightOffset: {x: -100, y: 150, z: 0}
 --- !u!114 &995634769
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10287,10 +10287,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   messageText: {fileID: 1013684524}
-  appearTime: 2
+  appearTime: 1
   blinkMinAlpha: 0.2
   blinkMaxAlpha: 1
-  blinkTime: 1
+  blinkTime: 0.7
 --- !u!1 &1199401349
 GameObject:
   m_ObjectHideFlags: 0
@@ -10321,6 +10321,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tutorial: {fileID: 1013684526}
+  waitTime: 3
 --- !u!4 &1199401351
 Transform:
   m_ObjectHideFlags: 0
@@ -10484,7 +10485,7 @@ MonoBehaviour:
   fadePanel: {fileID: 1928499584}
   fadeTime: 3
   nextSceneName: TextScene
-  waitBeforeFade: 0.5
+  waitBeforeFade: 1.5
 --- !u!1 &1594849314
 GameObject:
   m_ObjectHideFlags: 0
