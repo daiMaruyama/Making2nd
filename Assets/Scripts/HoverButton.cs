@@ -16,10 +16,15 @@ public class HoverButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
     private Color defaultColor;
     private Vector3 defaultScale;
 
+    private Tween colorTween;
+    private Tween scaleTween;
+
     private void Awake()
     {
         buttonImage = GetComponent<Image>();
-        defaultColor = buttonImage.color;
+        if (buttonImage != null)
+            defaultColor = buttonImage.color;
+
         defaultScale = transform.localScale;
     }
 
@@ -35,29 +40,45 @@ public class HoverButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
 
     private void SetHover(bool isHover)
     {
+        if (buttonImage == null || !gameObject.activeInHierarchy) return;
+
+        // 既存の Tween があれば Kill
+        colorTween?.Kill();
+        scaleTween?.Kill();
+
         if (isHover)
         {
-            buttonImage.DOColor(hoverColor, duration);
-            transform.DOScale(defaultScale * scaleUp, duration).SetEase(Ease.OutBack);
+            colorTween = buttonImage.DOColor(hoverColor, duration);
+            scaleTween = transform.DOScale(defaultScale * scaleUp, duration).SetEase(Ease.OutBack);
         }
         else
         {
-            buttonImage.DOColor(defaultColor, duration);
-            transform.DOScale(defaultScale, duration).SetEase(Ease.OutBack);
+            colorTween = buttonImage.DOColor(defaultColor, duration);
+            scaleTween = transform.DOScale(defaultScale, duration).SetEase(Ease.OutBack);
         }
     }
 
-    // パネル切り替え時に呼ぶリセット用関数
     public void ResetHover()
     {
-        // DOTweenは瞬時に戻す
-        buttonImage.color = defaultColor;
+        if (buttonImage != null)
+            buttonImage.color = defaultColor;
+
         transform.localScale = defaultScale;
 
-        // EventSystem上の選択も解除
         if (EventSystem.current != null && EventSystem.current.currentSelectedGameObject == gameObject)
         {
             EventSystem.current.SetSelectedGameObject(null);
         }
+
+        // Tween を確実に Kill
+        colorTween?.Kill();
+        scaleTween?.Kill();
+    }
+
+    private void OnDestroy()
+    {
+        // DOTween が破棄済みオブジェクトにアクセスしないようにする
+        colorTween?.Kill();
+        scaleTween?.Kill();
     }
 }
