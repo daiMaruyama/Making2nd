@@ -13,7 +13,7 @@ public class TutorialTextController : MonoBehaviour
 
     [Header("Blink Animation")]
     [SerializeField] private float blinkMinAlpha = 0.4f; // 最小アルファ
-    [SerializeField] private float blinkMaxAlpha = 1f;   // 最大アルファ
+    // [SerializeField] private float blinkMaxAlpha = 1f;   // 最大アルファ
     [SerializeField] private float blinkTime = 1f;       // 点滅周期
 
     private Tween blinkTween;
