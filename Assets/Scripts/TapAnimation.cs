@@ -5,21 +5,22 @@ using System.Collections;
 public class TapAnimton : MonoBehaviour
 {
     [Header("Player 1")]
-    [SerializeField] private SpriteRenderer p1Renderer; // 元からあるキャラの SpriteRenderer
-    [SerializeField] private Sprite p1BlinkSprite;      // 焦った顔
+    [SerializeField] private SpriteRenderer p1Renderer;
+    [SerializeField] private Sprite p1BlinkSprite;
 
     [Header("Player 2")]
     [SerializeField] private SpriteRenderer p2Renderer;
     [SerializeField] private Sprite p2BlinkSprite;
 
-    [SerializeField] private float blinkDuration = 0.2f; // 表示時間
+    [SerializeField] private float blinkDuration = 0.2f;
 
     private Sprite p1Original;
     private Sprite p2Original;
 
-    // Coroutine の参照を保持して同時押しで重ならないようにする
     private Coroutine p1BlinkCoroutine;
     private Coroutine p2BlinkCoroutine;
+
+    private int _lastPlayer2Count = 0;
 
     private void Start()
     {
@@ -29,28 +30,39 @@ public class TapAnimton : MonoBehaviour
 
     private void Update()
     {
-        // ゲームが進行中でない場合は顔アニメーションしない
         if (TapTwoPlayer.Instance == null || !TapTwoPlayer.Instance.IsRunning) return;
 
-        // Player 1 入力
+        // Player1 入力
         if (Keyboard.current.aKey.wasPressedThisFrame || Keyboard.current.dKey.wasPressedThisFrame)
         {
-            if (p1Renderer != null)
-            {
-                if (p1BlinkCoroutine != null) StopCoroutine(p1BlinkCoroutine);
-                p1BlinkCoroutine = StartCoroutine(BlinkFace(p1Renderer, p1BlinkSprite, p1Original));
-            }
+            StartBlink(p1Renderer, p1BlinkSprite, p1Original, ref p1BlinkCoroutine);
         }
 
-        // Player 2 入力
-        if (Keyboard.current.jKey.wasPressedThisFrame || Keyboard.current.lKey.wasPressedThisFrame)
+        // Player2 入力
+        if (!TapTwoPlayer.Instance.IsAI)
         {
-            if (p2Renderer != null)
+            if (Keyboard.current.jKey.wasPressedThisFrame || Keyboard.current.lKey.wasPressedThisFrame)
             {
-                if (p2BlinkCoroutine != null) StopCoroutine(p2BlinkCoroutine);
-                p2BlinkCoroutine = StartCoroutine(BlinkFace(p2Renderer, p2BlinkSprite, p2Original));
+                StartBlink(p2Renderer, p2BlinkSprite, p2Original, ref p2BlinkCoroutine);
             }
         }
+        else
+        {
+            // AIの場合：カウント増加を検知してアニメ
+            int currentCount = TapTwoPlayer.Instance.Player2Count;
+            if (currentCount > _lastPlayer2Count)
+            {
+                StartBlink(p2Renderer, p2BlinkSprite, p2Original, ref p2BlinkCoroutine);
+                _lastPlayer2Count = currentCount;
+            }
+        }
+    }
+
+    private void StartBlink(SpriteRenderer renderer, Sprite blink, Sprite original, ref Coroutine coroutine)
+    {
+        if (renderer == null) return;
+        if (coroutine != null) StopCoroutine(coroutine);
+        coroutine = StartCoroutine(BlinkFace(renderer, blink, original));
     }
 
     private IEnumerator BlinkFace(SpriteRenderer renderer, Sprite blink, Sprite original)

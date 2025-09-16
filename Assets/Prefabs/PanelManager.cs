@@ -29,47 +29,35 @@ public class PanelManager : MonoBehaviour
         howToPlayPanel2.SetActive(false);
     }
 
+    // ==== 共通：パネル表示 + ホバーリセット ====
+    private void ShowPanel(GameObject panel)
+    {
+        HideAll();
+        panel.SetActive(true);
+        ResetAllHoverButtons(panel);
+    }
+
+    private void ResetAllHoverButtons(GameObject panel)
+    {
+        HoverButton[] buttons = panel.GetComponentsInChildren<HoverButton>();
+        foreach (var btn in buttons)
+        {
+            btn.ResetHover();
+        }
+    }
+
     // ==== パネル切り替え ====
-    public void ShowMain()
-    {
-        HideAll();
-        mainPanel.SetActive(true);
-    }
-
-    public void ShowRanking()
-    {
-        HideAll();
-        rankingPanel.SetActive(true);
-    }
-
-    public void ShowOnePlayer()
-    {
-        HideAll();
-        onePlayerPanel.SetActive(true);
-    }
-
-    public void ShowTwoPlayer()
-    {
-        HideAll();
-        twoPlayerPanel.SetActive(true);
-    }
-
-    public void ShowHowToPlay1()
-    {
-        HideAll();
-        howToPlayPanel1.SetActive(true);
-    }
-
-    public void ShowHowToPlay2()
-    {
-        HideAll();
-        howToPlayPanel2.SetActive(true);
-    }
+    public void ShowMain() => ShowPanel(mainPanel);
+    public void ShowRanking() => ShowPanel(rankingPanel);
+    public void ShowOnePlayer() => ShowPanel(onePlayerPanel);
+    public void ShowTwoPlayer() => ShowPanel(twoPlayerPanel);
+    public void ShowHowToPlay1() => ShowPanel(howToPlayPanel1);
+    public void ShowHowToPlay2() => ShowPanel(howToPlayPanel2);
 
     // ==== ゲーム遷移 ====
     public void GoToGame(int mode)
     {
-        // mode: 1 = 1人シンプル, 2 = 1人鬼, 3 = 2人対戦 とかフラグに使える
+        // mode: 1 = 1人シンプル, 2 = 1人鬼, 3 = 2人対戦
         PlayerPrefs.SetInt("GameMode", mode);
         SceneManager.LoadScene(ingameSceneName);
     }

@@ -25,19 +25,39 @@ public class HoverButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        // 色を濃くする
-        buttonImage.DOColor(hoverColor, duration);
-
-        // 少し大きくする
-        transform.DOScale(defaultScale * scaleUp, duration).SetEase(Ease.OutBack);
+        SetHover(true);
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        // 元の色に戻す
-        buttonImage.DOColor(defaultColor, duration);
+        SetHover(false);
+    }
 
-        // 元のサイズに戻す
-        transform.DOScale(defaultScale, duration).SetEase(Ease.OutBack);
+    private void SetHover(bool isHover)
+    {
+        if (isHover)
+        {
+            buttonImage.DOColor(hoverColor, duration);
+            transform.DOScale(defaultScale * scaleUp, duration).SetEase(Ease.OutBack);
+        }
+        else
+        {
+            buttonImage.DOColor(defaultColor, duration);
+            transform.DOScale(defaultScale, duration).SetEase(Ease.OutBack);
+        }
+    }
+
+    // パネル切り替え時に呼ぶリセット用関数
+    public void ResetHover()
+    {
+        // DOTweenは瞬時に戻す
+        buttonImage.color = defaultColor;
+        transform.localScale = defaultScale;
+
+        // EventSystem上の選択も解除
+        if (EventSystem.current != null && EventSystem.current.currentSelectedGameObject == gameObject)
+        {
+            EventSystem.current.SetSelectedGameObject(null);
+        }
     }
 }

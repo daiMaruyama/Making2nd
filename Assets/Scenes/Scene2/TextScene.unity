@@ -386,7 +386,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   storyText: {fileID: 554456088}
-  nextSceneName: InGame
+  nextSceneName: SelectModeScene
 --- !u!114 &554456088
 MonoBehaviour:
   m_ObjectHideFlags: 0

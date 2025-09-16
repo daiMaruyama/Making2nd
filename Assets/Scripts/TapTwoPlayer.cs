@@ -15,6 +15,9 @@ public class TapTwoPlayer : MonoBehaviour
     [SerializeField] private Transform centerPoint;
 
     public bool IsRunning => _isRunning;
+    public int Player2Count => _player2Count; // ← public getter を追加
+    public bool IsAI => _isAI;               // ← AIモードか判定するgetter
+
 
     private Vector3 p1StartPos;
     private Vector3 p2StartPos;
@@ -45,6 +48,12 @@ public class TapTwoPlayer : MonoBehaviour
 
     private void Start()
     {
+        // --- PlayerPrefs からゲームモードを取得 ---
+        int mode = PlayerPrefs.GetInt("GameMode", 3); // デフォルト2人
+        if (mode == 1) SetAIParameters(true, false);   // 1人シンプル
+        else if (mode == 2) SetAIParameters(true, true); // 1人鬼
+        else SetAIParameters(false, false);           // 2人対戦
+
         _player1Count = 0;
         _player2Count = 0;
         _isRunning = false;
@@ -101,7 +110,8 @@ public class TapTwoPlayer : MonoBehaviour
     {
         if (Keyboard.current == null) return;
 
-        if (!_isAI) // AIモードならPlayer2入力は無効
+        // Player2入力はAIでなければ有効
+        if (!_isAI)
         {
             if (Keyboard.current.jKey.wasPressedThisFrame || Keyboard.current.lKey.wasPressedThisFrame)
             {
@@ -127,13 +137,11 @@ public class TapTwoPlayer : MonoBehaviour
 
             if (_isOniMode)
             {
-                // 鬼モード：ランキング1位速度
                 float bestTime = PlayerPrefs.GetFloat("BestTime0", 2f);
                 _nextAITapTime = Time.time + bestTime / targetTapCount;
             }
             else
             {
-                // シンプルモード：ランダム間隔
                 _nextAITapTime = Time.time + Random.Range(0.1f, 0.3f);
             }
         }
