@@ -3,42 +3,63 @@ using UnityEngine.SceneManagement;
 
 public class SelectMode : MonoBehaviour
 {
+    [Header("パネル")]
+    [SerializeField] private GameObject panel_SelectMode;
+    [SerializeField] private GameObject panel_SinglePlaySelect;
+    [SerializeField] private GameObject panel_TwoPlayerSelect;
+
     [Header("インゲームシーン名")]
     [SerializeField] private string inGameSceneName = "InGame";
 
     // ===========================
-    // 1人プレイ（シンプルモード）
+    // 初期画面ボタン
+    // ===========================
+    public void OnClickSinglePlay()
+    {
+        panel_SelectMode.SetActive(false);
+        panel_SinglePlaySelect.SetActive(true);
+    }
+
+    public void OnClickTwoPlayer()
+    {
+        panel_SelectMode.SetActive(false);
+        panel_TwoPlayerSelect.SetActive(true);
+    }
+
+    public void OnClickHowToPlay() { /* 遊び方パネル表示 */ }
+    public void OnClickRanking() { /* ランキングパネル表示 */ }
+
+    // ===========================
+    // 1人プレイ難易度ボタン
     // ===========================
     public void OnSinglePlaySimple()
     {
-        LoadInGameScene(true, false); // AI有効、シンプルモード
+        TapTwoPlayer.SetAIParameters(true, false);
+        SceneManager.LoadScene(inGameSceneName);
     }
 
-    // ===========================
-    // 1人プレイ（鬼モード）
-    // ===========================
     public void OnSinglePlayOni()
     {
-        LoadInGameScene(true, true); // AI有効、鬼モード（ゴースト相当）
-    }
-
-    // ===========================
-    // 2人プレイ
-    // ===========================
-    public void OnTwoPlayer()
-    {
-        LoadInGameScene(false, false); // AI無効
-    }
-
-    // ===========================
-    // 共通シーン遷移処理
-    // ===========================
-    private void LoadInGameScene(bool isAI, bool isOniMode)
-    {
-        // インゲームに渡すAI設定
-        TapTwoPlayer.SetAIParameters(isAI, isOniMode);
-
-        // シーン遷移
+        TapTwoPlayer.SetAIParameters(true, true);
         SceneManager.LoadScene(inGameSceneName);
+    }
+
+    // ===========================
+    // 2人プレイスタートボタン
+    // ===========================
+    public void OnTwoPlayerStart()
+    {
+        TapTwoPlayer.SetAIParameters(false, false);
+        SceneManager.LoadScene(inGameSceneName);
+    }
+
+    // ===========================
+    // 戻るボタン
+    // ===========================
+    public void OnClickBack()
+    {
+        panel_SelectMode.SetActive(true);
+        panel_SinglePlaySelect.SetActive(false);
+        panel_TwoPlayerSelect.SetActive(false);
     }
 }
