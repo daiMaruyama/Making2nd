@@ -575,8 +575,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f4f3bba4841f764d9f1721c8b7fce59, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  versusSceneName: IngameVersus
-  ghostSceneName: IngameGhost
+  versusSceneName: InGame
+  ghostSceneName: InGame
 --- !u!4 &681035371
 Transform:
   m_ObjectHideFlags: 0

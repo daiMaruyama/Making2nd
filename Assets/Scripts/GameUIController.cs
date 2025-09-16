@@ -6,157 +6,80 @@ public class GameUIController : MonoBehaviour
 {
     public static GameUIController Instance { get; private set; }
 
-    [Header("UI")]
-    [SerializeField] private TextMeshProUGUI countdownText;     // 中央演出
-    [SerializeField] private TextMeshProUGUI timerText;         // 左上タイマー
-    [SerializeField] private TextMeshProUGUI p1RemainingText;   // P1残り回数
-    [SerializeField] private TextMeshProUGUI p2RemainingText;   // P2残り回数
-
-    [Header("Skybox")]
-    [SerializeField] private Material startSkybox;
-    [SerializeField] private Material defaultSkybox;
+    [SerializeField] private TextMeshProUGUI countdownText;   // 中央演出
+    [SerializeField] private TextMeshProUGUI timerText;       // 左上経過時間
+    [SerializeField] private TextMeshProUGUI p1RemainingText; // P1残り回数
+    [SerializeField] private TextMeshProUGUI p2RemainingText; // P2残り回数
 
     private void Awake()
     {
         Instance = this;
-
-        // Canvas は必ずアクティブ、countdownText もアクティブにして透明に
-        if (countdownText != null)
-        {
-            countdownText.gameObject.SetActive(true);
-            var c = countdownText.color;
-            c.a = 0f;
-            countdownText.color = c;
-        }
-
-        HideTimer();
-        HideTapCount();
-
-        if (defaultSkybox != null)
-            RenderSettings.skybox = defaultSkybox;
+        ClearCountdown();
+        UpdateTimer(0);
+        timerText.gameObject.SetActive(false);
     }
 
     public IEnumerator StartCountdown(float waitBeforeStart = 1f)
     {
         yield return new WaitForSeconds(waitBeforeStart);
 
-        // カウントダウン表示
-        for (int i = 3; i > 0; i--)
+        int count = 3;
+        while (count > 0)
         {
-            SetCountdownText(i.ToString());
+            countdownText.text = count.ToString();
             yield return new WaitForSeconds(1f);
+            count--;
         }
 
-        // Start! 表示
-        SetCountdownText("Start!");
-        yield return new WaitForSeconds(1f);
+        countdownText.text = "Start!";
+        yield return new WaitForSeconds(0.2f);
+        ClearCountdown();
+        timerText.gameObject.SetActive(true);
 
-        // Countdown 完了で Alpha を 0 に
-        SetCountdownTextAlpha(0f);
-
-        // Skybox 切替
-        if (startSkybox != null)
-            RenderSettings.skybox = startSkybox;
-
-        // タップカウントとタイマー表示
-        ShowTapCount();
-        ShowTimer(0f);
-
+        // タップ残数とタイマーを表示
         if (TapTwoPlayer.Instance != null)
         {
             UpdateTapCount(TapTwoPlayer.Instance.targetTapCount, TapTwoPlayer.Instance.targetTapCount);
+            UpdateTimer(0f);
             TapTwoPlayer.Instance.StartGame();
         }
     }
 
-    #region Countdown
-    private void SetCountdownText(string text)
-    {
-        if (countdownText != null)
-        {
-            countdownText.text = text;
-            SetCountdownTextAlpha(1f);
-        }
-    }
-
-    private void SetCountdownTextAlpha(float alpha)
-    {
-        if (countdownText != null)
-        {
-            Color c = countdownText.color;
-            c.a = alpha;
-            countdownText.color = c;
-        }
-    }
-    #endregion
-
-    #region Timer
     public void UpdateTimer(float elapsedTime)
     {
-        if (timerText != null && timerText.gameObject.activeSelf)
+        if (timerText != null)
             timerText.text = $"Time: {elapsedTime:F2}s";
     }
 
-    private void ShowTimer(float elapsedTime)
+    public void ShowFinishText(string message)
     {
-        if (timerText != null)
-        {
-            timerText.gameObject.SetActive(true);
-            timerText.text = $"Time: {elapsedTime:F2}s";
-        }
+        if (countdownText != null)
+            countdownText.text = message;
     }
 
-    private void HideTimer()
+    public void ClearCountdown()
     {
-        if (timerText != null)
-            timerText.gameObject.SetActive(false);
+        if (countdownText != null)
+            countdownText.text = "";
+        timerText.gameObject.SetActive(false);
     }
-    #endregion
 
-    #region TapCount
     public void UpdateTapCount(int p1Remaining, int p2Remaining)
     {
         if (p1RemainingText != null)
         {
-            p1RemainingText.text = $"{p1Remaining}";
-            p1RemainingText.color = GetTapColor(p1Remaining);
+            p1RemainingText.text = $"P1: {p1Remaining}";
+            p1RemainingText.color = p1Remaining <= 0 ? Color.gray :
+                                    p1Remaining <= TapTwoPlayer.Instance.targetTapCount / 5 ? Color.red :
+                                    p1Remaining <= TapTwoPlayer.Instance.targetTapCount / 2 ? Color.yellow : Color.white;
         }
 
         if (p2RemainingText != null)
         {
-            p2RemainingText.text = $"{p2Remaining}";
-            p2RemainingText.color = GetTapColor(p2Remaining);
+            p2RemainingText.text = $"P2: {p2Remaining}";
+            p2RemainingText.color = p2Remaining <= 0 ? Color.gray :
+                                    p2Remaining <= TapTwoPlayer.Instance.targetTapCount / 5 ? Color.red :
+                                    p2Remaining <= TapTwoPlayer.Instance.targetTapCount / 2 ? Color.yellow : Color.white;
         }
-    }
-
-    private Color GetTapColor(int remaining)
-    {
-        int max = TapTwoPlayer.Instance.targetTapCount;
-        if (remaining <= 0) return Color.gray;
-        if (remaining <= max / 5) return Color.red;
-        if (remaining <= max / 2) return Color.yellow;
-        return Color.white;
-    }
-
-    private void ShowTapCount()
-    {
-        if (p1RemainingText != null && p1RemainingText.transform.parent != null)
-            p1RemainingText.transform.parent.gameObject.SetActive(true);
-        if (p2RemainingText != null && p2RemainingText.transform.parent != null)
-            p2RemainingText.transform.parent.gameObject.SetActive(true);
-    }
-
-    private void HideTapCount()
-    {
-        if (p1RemainingText != null && p1RemainingText.transform.parent != null)
-            p1RemainingText.transform.parent.gameObject.SetActive(false);
-        if (p2RemainingText != null && p2RemainingText.transform.parent != null)
-            p2RemainingText.transform.parent.gameObject.SetActive(false);
-    }
-    #endregion
-
-    public void ShowTimeUp()
-    {
-        SetCountdownText("Time Up!");
     }
 }

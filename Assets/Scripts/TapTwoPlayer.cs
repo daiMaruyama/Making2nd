@@ -1,4 +1,3 @@
-// TapTwoPlayer.cs
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -6,13 +5,16 @@ public class TapTwoPlayer : MonoBehaviour
 {
     public static TapTwoPlayer Instance { get; private set; }
 
-    public int targetTapCount = 20; // 規定回数
+    [Header("ゲーム設定")]
+    public int targetTapCount = 20;
     [SerializeField] private float limitTime = 10f;
 
-    // キャラクター Transform
+    [Header("キャラクター")]
     [SerializeField] private Transform p1Character;
     [SerializeField] private Transform p2Character;
     [SerializeField] private Transform centerPoint;
+
+    public bool IsRunning => _isRunning;
 
     private Vector3 p1StartPos;
     private Vector3 p2StartPos;
@@ -22,6 +24,19 @@ public class TapTwoPlayer : MonoBehaviour
 
     private float _startTime;
     private bool _isRunning = false;
+
+    // ===========================
+    // AI設定
+    // ===========================
+    private static bool _isAI = false;
+    private static bool _isOniMode = false;
+    private float _nextAITapTime = 0f;
+
+    public static void SetAIParameters(bool isAI, bool isOniMode)
+    {
+        _isAI = isAI;
+        _isOniMode = isOniMode;
+    }
 
     private void Awake()
     {
@@ -37,7 +52,6 @@ public class TapTwoPlayer : MonoBehaviour
         if (p1Character != null) p1StartPos = p1Character.position;
         if (p2Character != null) p2StartPos = p2Character.position;
 
-        // StartCountdown開始
         if (GameUIController.Instance != null)
             StartCoroutine(GameUIController.Instance.StartCountdown());
         else
@@ -56,25 +70,29 @@ public class TapTwoPlayer : MonoBehaviour
 
         HandlePCInput();
 
+        if (_isAI)
+            HandleAIInput();
+
         float elapsed = Time.time - _startTime;
         GameUIController.Instance?.UpdateTimer(elapsed);
 
-        // キャラクター移動
         UpdateCharacterPositions();
 
-        // 勝利条件チェック
+        // 勝敗判定
         if (_player1Count >= targetTapCount)
         {
+            GameUIController.Instance?.ShowFinishText("FINISH!");
             FinishGame(1, elapsed);
         }
         else if (_player2Count >= targetTapCount)
         {
+            GameUIController.Instance?.ShowFinishText("FINISH!");
             FinishGame(2, elapsed);
         }
         else if (elapsed >= limitTime)
         {
             _isRunning = false;
-            GameUIController.Instance?.ShowTimeUp();
+            GameUIController.Instance?.ShowFinishText("TIME UP!");
             FinishGame(0, elapsed); // 引き分け
         }
     }
@@ -83,16 +101,41 @@ public class TapTwoPlayer : MonoBehaviour
     {
         if (Keyboard.current == null) return;
 
+        if (!_isAI) // AIモードならPlayer2入力は無効
+        {
+            if (Keyboard.current.jKey.wasPressedThisFrame || Keyboard.current.lKey.wasPressedThisFrame)
+            {
+                _player2Count++;
+                UpdateTapUI();
+            }
+        }
+
+        // Player1
         if (Keyboard.current.aKey.wasPressedThisFrame || Keyboard.current.dKey.wasPressedThisFrame)
         {
             _player1Count++;
             UpdateTapUI();
         }
+    }
 
-        if (Keyboard.current.jKey.wasPressedThisFrame || Keyboard.current.lKey.wasPressedThisFrame)
+    private void HandleAIInput()
+    {
+        if (Time.time >= _nextAITapTime)
         {
             _player2Count++;
             UpdateTapUI();
+
+            if (_isOniMode)
+            {
+                // 鬼モード：ランキング1位速度
+                float bestTime = PlayerPrefs.GetFloat("BestTime0", 2f);
+                _nextAITapTime = Time.time + bestTime / targetTapCount;
+            }
+            else
+            {
+                // シンプルモード：ランダム間隔
+                _nextAITapTime = Time.time + Random.Range(0.1f, 0.3f);
+            }
         }
     }
 
