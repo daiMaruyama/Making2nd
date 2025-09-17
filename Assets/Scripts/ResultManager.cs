@@ -84,7 +84,7 @@ public class ResultManager : MonoBehaviour
     // 名前入力決定ボタン
     public void OnSubmitName()
     {
-        string playerName = _nameInput.text;
+        string playerName = _nameInput.text.Trim();
         if (string.IsNullOrWhiteSpace(playerName)) playerName = "NoName";
 
         // 最後のタイムをランキングに保存
