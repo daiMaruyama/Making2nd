@@ -48,7 +48,7 @@ public class TapTwoPlayer : MonoBehaviour
 
     private void Start()
     {
-        Debug.Log("sss");
+        // Debug.Log("sss");
         // --- PlayerPrefs からゲームモードを取得 ---
         int mode = PlayerPrefs.GetInt("GameMode", 3); // デフォルト2人
         if (mode == 1) SetAIParameters(true, false);   // 1人シンプル

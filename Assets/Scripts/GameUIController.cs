@@ -48,7 +48,7 @@ public class GameUIController : MonoBehaviour
     public void UpdateTimer(float elapsedTime)
     {
         if (timerText != null)
-            timerText.text = $":{elapsedTime:F2}s";
+            timerText.text = $"{elapsedTime:F2}s";
     }
 
     public void ShowFinishText(string message)
