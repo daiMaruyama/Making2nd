@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityEngine.InputSystem;
+using TMPro;
 
 public class ResultManager : MonoBehaviour
 {
@@ -16,8 +17,33 @@ public class ResultManager : MonoBehaviour
     [Header("ホールド秒数")]
     [SerializeField] private float _requiredHoldTime = 2f;
 
+    [Header("ランキング入力UI")]
+    [SerializeField] private TMP_InputField _nameInput;
+    [SerializeField] private GameObject _inputPanel;
+
     private float _holdTime1 = 0f;
     private float _holdTime2 = 0f;
+
+    private void Start()
+    {
+        // ResetAllPrefs();
+        if (GameResultManager.Instance == null)
+        {
+            Debug.LogError("GameResultManager が存在しません！");
+            _inputPanel.SetActive(false);
+            return;
+        }
+
+        // GameResultManager で更新対象なら入力パネルを開く
+        _inputPanel.SetActive(GameResultManager.NeedsNameInput);
+    }
+
+    public void ResetAllPrefs()
+    {
+        PlayerPrefs.DeleteAll();
+        PlayerPrefs.Save();
+        Debug.Log("PlayerPrefs をリセットしました。");
+    }
 
     void Update()
     {
@@ -53,5 +79,23 @@ public class ResultManager : MonoBehaviour
             _holdTime2 = 0f;
             _gameImage.fillAmount = 0f;
         }
+    }
+
+    // 名前入力決定ボタン
+    public void OnSubmitName()
+    {
+        string playerName = _nameInput.text;
+        if (string.IsNullOrWhiteSpace(playerName)) playerName = "NoName";
+
+        // 最後のタイムをランキングに保存
+        RankingSystem.SaveRecord(playerName, GameResultManager.LastTime);
+
+        _inputPanel.SetActive(false);
+    }
+
+    // スキップ用
+    public void OnSkip()
+    {
+        _inputPanel.SetActive(false);
     }
 }

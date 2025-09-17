@@ -1,4 +1,3 @@
-// GameResultManager.cs
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -10,6 +9,9 @@ public class GameResultManager : MonoBehaviour
     private int _p1Count;
     private int _p2Count;
     private float _clearTime;
+
+    public static float LastTime;
+    public static bool NeedsNameInput;
 
     [Header("シーン & リロード設定")]
     [SerializeField] private float delayBeforeReload = 3f;
@@ -36,45 +38,25 @@ public class GameResultManager : MonoBehaviour
         _p2Count = p2;
         _clearTime = time;
 
-        // ランキング判定など
-        if (winner == 1 || winner == 2)
-            SaveRecord(time);
+        LastTime = time;
 
-        // Finish後 n 秒でゲーム本編をリロード
+        bool isSoloMode = TapTwoPlayer.Instance != null && TapTwoPlayer.Instance.IsAI;
+
+        if (isSoloMode)
+        {
+            // ソロモード：勝者が1（プレイヤー1）の場合のみランキング更新
+            NeedsNameInput = (winner == 1) && RankingSystem.IsNewRecord(time);
+        }
+        else
+        {
+            // 2人対戦：勝者が1か2でランキング更新
+            NeedsNameInput = (winner == 1 || winner == 2) && RankingSystem.IsNewRecord(time);
+        }
+
+        // ゲームシーンを n 秒後にリロード
         Invoke(nameof(ReloadGameScene), delayBeforeReload);
     }
 
-    private void SaveRecord(float newTime)
-    {
-        const int MaxRank = 5;
-
-        float[] times = new float[MaxRank];
-        for (int i = 0; i < MaxRank; i++)
-            times[i] = PlayerPrefs.GetFloat($"BestTime{i}", float.MaxValue);
-
-        int insertIndex = -1;
-        for (int i = 0; i < MaxRank; i++)
-        {
-            if (newTime < times[i])
-            {
-                insertIndex = i;
-                break;
-            }
-        }
-
-        if (insertIndex != -1)
-        {
-            for (int j = MaxRank - 1; j > insertIndex; j--)
-                times[j] = times[j - 1];
-
-            times[insertIndex] = newTime;
-
-            for (int i = 0; i < MaxRank; i++)
-                PlayerPrefs.SetFloat($"BestTime{i}", times[i]);
-
-            PlayerPrefs.Save();
-        }
-    }
 
     private void ReloadGameScene()
     {
