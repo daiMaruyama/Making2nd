@@ -136,7 +136,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &37324709
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1724,6 +1724,7 @@ MonoBehaviour:
   _requiredHoldTime: 2
   _nameInput: {fileID: 813063953}
   _inputPanel: {fileID: 37324708}
+  _transtionPanel: {fileID: 1275614090}
 --- !u!4 &1391967355
 Transform:
   m_ObjectHideFlags: 0

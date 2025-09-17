@@ -19,7 +19,8 @@ public class ResultManager : MonoBehaviour
 
     [Header("ランキング入力UI")]
     [SerializeField] private TMP_InputField _nameInput;
-    [SerializeField] private GameObject _inputPanel;
+    [SerializeField] GameObject _inputPanel;
+    [SerializeField] GameObject _transtionPanel;
 
     private float _holdTime1 = 0f;
     private float _holdTime2 = 0f;
@@ -31,11 +32,14 @@ public class ResultManager : MonoBehaviour
         {
             Debug.LogError("GameResultManager が存在しません！");
             _inputPanel.SetActive(false);
+            _transtionPanel.SetActive(true);
             return;
         }
 
-        // GameResultManager で更新対象なら入力パネルを開く
-        _inputPanel.SetActive(GameResultManager.NeedsNameInput);
+        // NeedsNameInput が true なら入力パネル、それ以外なら遷移パネル
+        bool showInput = GameResultManager.NeedsNameInput;
+        _inputPanel.SetActive(showInput);
+        _transtionPanel.SetActive(!showInput);
     }
 
     public void ResetAllPrefs()
@@ -91,6 +95,7 @@ public class ResultManager : MonoBehaviour
         RankingSystem.SaveRecord(playerName, GameResultManager.LastTime);
 
         _inputPanel.SetActive(false);
+        _transtionPanel.SetActive(true);
     }
 
     // スキップ用
