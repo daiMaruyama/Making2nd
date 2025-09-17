@@ -48,6 +48,7 @@ public class TapTwoPlayer : MonoBehaviour
 
     private void Start()
     {
+        Debug.Log("sss");
         // --- PlayerPrefs からゲームモードを取得 ---
         int mode = PlayerPrefs.GetInt("GameMode", 3); // デフォルト2人
         if (mode == 1) SetAIParameters(true, false);   // 1人シンプル
@@ -174,5 +175,12 @@ public class TapTwoPlayer : MonoBehaviour
         _isRunning = false;
 
         GameResultManager.Instance.SetResult(winner, _player1Count, _player2Count, time);
+
+        DontDestroyCleaner cleaner = Object.FindFirstObjectByType<DontDestroyCleaner>();
+        if (cleaner != null)
+        {
+            cleaner.MoveToBackupParent();
+        }
+
     }
 }

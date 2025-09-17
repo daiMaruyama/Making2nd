@@ -10289,7 +10289,6 @@ MonoBehaviour:
   messageText: {fileID: 1013684524}
   appearTime: 1
   blinkMinAlpha: 0.2
-  blinkMaxAlpha: 1
   blinkTime: 0.7
 --- !u!1 &1199401349
 GameObject:
@@ -11247,7 +11246,7 @@ RectTransform:
   m_GameObject: {fileID: 1928499583}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.88213, y: 0.88213, z: 0.88213}
+  m_LocalScale: {x: 1.1753501, y: 1.1753501, z: 1.1753501}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1696138711}

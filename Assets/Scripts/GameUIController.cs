@@ -48,7 +48,7 @@ public class GameUIController : MonoBehaviour
     public void UpdateTimer(float elapsedTime)
     {
         if (timerText != null)
-            timerText.text = $"Time: {elapsedTime:F2}s";
+            timerText.text = $":{elapsedTime:F2}s";
     }
 
     public void ShowFinishText(string message)
@@ -68,7 +68,7 @@ public class GameUIController : MonoBehaviour
     {
         if (p1RemainingText != null)
         {
-            p1RemainingText.text = $"P1: {p1Remaining}";
+            p1RemainingText.text = $"Žc‚è:{p1Remaining}‰ñ";
             p1RemainingText.color = p1Remaining <= 0 ? Color.gray :
                                     p1Remaining <= TapTwoPlayer.Instance.targetTapCount / 5 ? Color.red :
                                     p1Remaining <= TapTwoPlayer.Instance.targetTapCount / 2 ? Color.yellow : Color.white;
@@ -76,7 +76,7 @@ public class GameUIController : MonoBehaviour
 
         if (p2RemainingText != null)
         {
-            p2RemainingText.text = $"P2: {p2Remaining}";
+            p2RemainingText.text = $"Žc‚è:{p2Remaining}‰ñ";
             p2RemainingText.color = p2Remaining <= 0 ? Color.gray :
                                     p2Remaining <= TapTwoPlayer.Instance.targetTapCount / 5 ? Color.red :
                                     p2Remaining <= TapTwoPlayer.Instance.targetTapCount / 2 ? Color.yellow : Color.white;
