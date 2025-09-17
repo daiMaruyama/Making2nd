@@ -6,48 +6,56 @@ using UnityEngine.SceneManagement;
 
 public class StoryTextFlow : MonoBehaviour
 {
-    [SerializeField] private TMP_Text storyText;
-    [SerializeField] private string nextSceneName;
+    [SerializeField] private TMP_Text _storyText;
+    [SerializeField] private string _nextSceneName;
+
     [Header("フェードインするパネル")]
-    [SerializeField] private GameObject panelToFade; // パネルオブジェクト
-    [SerializeField] private float fadeDuration = 1f;
+    [SerializeField] private GameObject _panelToFade;
+    [SerializeField] private float _fadeDuration = 1f;
+
+    [Header("効果音")]
+    [SerializeField] private AudioSource _audioSource;
+    [SerializeField] private AudioClip _charSound;
+
+    [Header("次へ三角マーク")]
+    [SerializeField] private TMP_Text _nextArrow;
+    [SerializeField] private float _blinkInterval = 0.5f;
+    private Coroutine _blinkCoroutine;
 
     private SpriteRenderer _panelSpriteRenderer;
 
-    private string[] storyLines =
+    private string[] _storyLines =
     {
         "かつて働き者だった織姫と彦星。",
         "結婚後は……まさかのニート化！",
-
         "怒った天帝は2人を天の川の両岸へ。",
         "しかし情けをかけ、年に一度だけ再会を許した。",
-
         "毎年、涙の再会を果たす2人。",
         "……だが今年はひと味違う！",
-
         "天の川の真ん中に",
         "先に着いた方こそ、本当に想いが強い！？",
-
         "愛か？ 努力か？ はたまた根性か！？",
         "いざ、勝負！"
     };
 
-    private int currentLine = 0;
-    private bool isTyping = false;
+    private int _currentLine = 0;
+    private bool _isTyping = false;
 
     void Start()
     {
-        // フェード対象のSpriteRenderer取得
-        if (panelToFade != null)
+        if (_panelToFade != null)
         {
-            _panelSpriteRenderer = panelToFade.GetComponentInChildren<SpriteRenderer>();
+            _panelSpriteRenderer = _panelToFade.GetComponentInChildren<SpriteRenderer>();
             if (_panelSpriteRenderer != null)
             {
                 Color c = _panelSpriteRenderer.color;
-                c.a = 0f; // 最初は透明
+                c.a = 0f;
                 _panelSpriteRenderer.color = c;
             }
         }
+
+        if (_nextArrow != null)
+            _nextArrow.gameObject.SetActive(false);
 
         ShowLine();
     }
@@ -64,54 +72,69 @@ public class StoryTextFlow : MonoBehaviour
 
     private void OnTap()
     {
-        if (isTyping)
+        if (_isTyping)
         {
             StopAllCoroutines();
-            storyText.text = storyLines[currentLine];
-            isTyping = false;
+            _storyText.text = _storyLines[_currentLine];
+            _isTyping = false;
+
+            ShowNextArrow();
         }
         else
         {
-            currentLine++;
-            if (currentLine < storyLines.Length)
+            HideNextArrow();
+
+            _currentLine++;
+            if (_currentLine < _storyLines.Length)
             {
                 ShowLine();
 
-                // 指定セリフのあとにパネルフェードイン
-                if (storyLines[currentLine - 1] == "しかし情けをかけ、年に一度だけ再会を許した。")
+                if (_storyLines[_currentLine - 1] == "しかし情けをかけ、年に一度だけ再会を許した。")
                 {
                     if (_panelSpriteRenderer != null)
-                        StartCoroutine(FadeInSprite(_panelSpriteRenderer, fadeDuration));
+                        StartCoroutine(FadeInSprite(_panelSpriteRenderer, _fadeDuration));
                 }
             }
             else
             {
-                SceneManager.LoadScene(nextSceneName);
+                SceneManager.LoadScene(_nextSceneName);
             }
         }
     }
 
     void ShowLine()
     {
-        storyText.text = "";
-        StartCoroutine(TypeText(storyLines[currentLine], 0.05f));
+        _storyText.text = "";
+        StartCoroutine(TypeText(_storyLines[_currentLine], 0.05f));
     }
 
-    IEnumerator TypeText(string text, float delay)
+    private IEnumerator TypeText(string text, float delay)
     {
-        isTyping = true;
-        storyText.text = "";
+        _isTyping = true;
+        _storyText.text = "";
+
+        // 表示開始後に文字送り音再生
+        if (_audioSource != null && _charSound != null)
+        {
+            _audioSource.clip = _charSound;
+            _audioSource.Play();
+        }
 
         foreach (char c in text)
         {
-            storyText.text += c;
+            _storyText.text += c;
             yield return new WaitForSeconds(delay);
         }
 
-        isTyping = false;
+        // フレーズ表示完了で音停止
+        if (_audioSource != null)
+            _audioSource.Stop();
+
+        _isTyping = false;
+
+        ShowNextArrow();
     }
 
-    // SpriteRendererを徐々に不透明にするCoroutine
     private IEnumerator FadeInSprite(SpriteRenderer sprite, float duration)
     {
         float elapsed = 0f;
@@ -125,7 +148,44 @@ public class StoryTextFlow : MonoBehaviour
             yield return null;
         }
 
-        c.a = 0.5f; // 半透明
+        c.a = 0.5f;
         sprite.color = c;
+    }
+
+    // ------------------- TMP三角マーク 点滅 -------------------
+    private void ShowNextArrow()
+    {
+        if (_nextArrow != null)
+        {
+            _nextArrow.gameObject.SetActive(true);
+
+            if (_blinkCoroutine != null)
+                StopCoroutine(_blinkCoroutine);
+
+            _blinkCoroutine = StartCoroutine(BlinkArrow(_nextArrow, _blinkInterval));
+        }
+    }
+
+    private void HideNextArrow()
+    {
+        if (_nextArrow != null)
+        {
+            _nextArrow.gameObject.SetActive(false);
+
+            if (_blinkCoroutine != null)
+            {
+                StopCoroutine(_blinkCoroutine);
+                _blinkCoroutine = null;
+            }
+        }
+    }
+
+    private IEnumerator BlinkArrow(TMP_Text arrow, float interval)
+    {
+        while (true)
+        {
+            arrow.enabled = !arrow.enabled;
+            yield return new WaitForSeconds(interval);
+        }
     }
 }
