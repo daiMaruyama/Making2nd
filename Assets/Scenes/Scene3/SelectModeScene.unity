@@ -2793,7 +2793,6 @@ GameObject:
   - component: {fileID: 1021836773}
   - component: {fileID: 1021836772}
   - component: {fileID: 1021836775}
-  - component: {fileID: 1021836776}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -2919,19 +2918,54 @@ MonoBehaviour:
     m_MipBias: 0
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
---- !u!114 &1021836776
+--- !u!1 &1059971349
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1059971351}
+  - component: {fileID: 1059971350}
+  m_Layer: 0
+  m_Name: SkyBoxRotate
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1059971350
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1021836771}
+  m_GameObject: {fileID: 1059971349}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bf97b509a6aea4144a99674c96585fd4, type: 3}
+  m_Script: {fileID: 11500000, guid: c92e49d51274ea04ab176aa278c98753, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  autoRotationSpeed: 0.4
+  skyboxMaterial: {fileID: 2100000, guid: e9565315f0222944faca567ce3dfa556, type: 2}
+  rotationSpeed: 1
+  initialRotation: 2
+  startDelay: 2
+--- !u!4 &1059971351
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1059971349}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1724.6, y: 256.4, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!224 &1063548831 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 794411465198410737, guid: 3826fbccafc96794ab6507482c33f005, type: 3}
@@ -7537,6 +7571,7 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 1021836774}
+  - {fileID: 1059971351}
   - {fileID: 1482860581}
   - {fileID: 763502900}
   - {fileID: 352172531}

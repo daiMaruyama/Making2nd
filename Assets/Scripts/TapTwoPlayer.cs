@@ -6,21 +6,21 @@ public class TapTwoPlayer : MonoBehaviour
     public static TapTwoPlayer Instance { get; private set; }
 
     [Header("ゲーム設定")]
-    public int targetTapCount = 20;
+    public int targetTapCount = 20;        // ← そのまま public のまま残す
     [SerializeField] private float limitTime = 10f;
 
     [Header("キャラクター")]
     [SerializeField] private Transform p1Character;
     [SerializeField] private Transform p2Character;
-    [SerializeField] private Transform centerPoint;
+    [SerializeField] private Transform p1GoalPoint;   // ← 追加
+    [SerializeField] private Transform p2GoalPoint;   // ← 追加
 
     public bool IsRunning => _isRunning;
-    public int Player2Count => _player2Count; // ← public getter を追加
-    public bool IsAI => _isAI;               // ← AIモードか判定するgetter
+    public int Player2Count => _player2Count;
+    public bool IsAI => _isAI;
 
-
-    private Vector3 p1StartPos;
-    private Vector3 p2StartPos;
+    private Vector3 _p1StartPos;
+    private Vector3 _p2StartPos;
 
     private int _player1Count = 0;
     private int _player2Count = 0;
@@ -48,19 +48,17 @@ public class TapTwoPlayer : MonoBehaviour
 
     private void Start()
     {
-        // Debug.Log("sss");
-        // --- PlayerPrefs からゲームモードを取得 ---
-        int mode = PlayerPrefs.GetInt("GameMode", 3); // デフォルト2人
-        if (mode == 1) SetAIParameters(true, false);   // 1人シンプル
-        else if (mode == 2) SetAIParameters(true, true); // 1人鬼
-        else SetAIParameters(false, false);           // 2人対戦
+        int mode = PlayerPrefs.GetInt("GameMode", 3);
+        if (mode == 1) SetAIParameters(true, false);
+        else if (mode == 2) SetAIParameters(true, true);
+        else SetAIParameters(false, false);
 
         _player1Count = 0;
         _player2Count = 0;
         _isRunning = false;
 
-        if (p1Character != null) p1StartPos = p1Character.position;
-        if (p2Character != null) p2StartPos = p2Character.position;
+        if (p1Character != null) _p1StartPos = p1Character.position;
+        if (p2Character != null) _p2StartPos = p2Character.position;
 
         if (GameUIController.Instance != null)
             StartCoroutine(GameUIController.Instance.StartCountdown());
@@ -111,7 +109,6 @@ public class TapTwoPlayer : MonoBehaviour
     {
         if (Keyboard.current == null) return;
 
-        // Player2入力はAIでなければ有効
         if (!_isAI)
         {
             if (Keyboard.current.jKey.wasPressedThisFrame || Keyboard.current.lKey.wasPressedThisFrame)
@@ -121,7 +118,6 @@ public class TapTwoPlayer : MonoBehaviour
             }
         }
 
-        // Player1
         if (Keyboard.current.aKey.wasPressedThisFrame || Keyboard.current.dKey.wasPressedThisFrame)
         {
             _player1Count++;
@@ -157,15 +153,15 @@ public class TapTwoPlayer : MonoBehaviour
 
     private void UpdateCharacterPositions()
     {
-        if (p1Character != null && centerPoint != null)
+        if (p1Character != null && p1GoalPoint != null)
         {
             float progress1 = Mathf.Clamp01(_player1Count / (float)targetTapCount);
-            p1Character.position = Vector3.Lerp(p1StartPos, centerPoint.position, progress1);
+            p1Character.position = Vector3.Lerp(_p1StartPos, p1GoalPoint.position, progress1);
         }
-        if (p2Character != null && centerPoint != null)
+        if (p2Character != null && p2GoalPoint != null)
         {
             float progress2 = Mathf.Clamp01(_player2Count / (float)targetTapCount);
-            p2Character.position = Vector3.Lerp(p2StartPos, centerPoint.position, progress2);
+            p2Character.position = Vector3.Lerp(_p2StartPos, p2GoalPoint.position, progress2);
         }
     }
 
@@ -181,6 +177,5 @@ public class TapTwoPlayer : MonoBehaviour
         {
             cleaner.MoveToBackupParent();
         }
-
     }
 }
