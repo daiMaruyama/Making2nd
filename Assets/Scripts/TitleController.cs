@@ -22,6 +22,7 @@ public class TitleController : MonoBehaviour
     [Header("オブジェクト")]
     [SerializeField] GameObject _object1;
     [SerializeField] GameObject _object2;
+    [SerializeField] GameObject _object3;
     [SerializeField] float moveTime = 2f;
 
 
@@ -98,6 +99,12 @@ public class TitleController : MonoBehaviour
         {
             // 右方向に移動して消える
             _object2.transform.DOLocalMoveX(Screen.width, moveTime).SetEase(Ease.InQuad);
+        }
+
+        if (_object3 != null)
+        {
+            // Fadeで消える
+            _object3.transform.position = new Vector3(0, 1000, 10000);
         }
     }
 

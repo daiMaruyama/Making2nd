@@ -99,7 +99,7 @@ public class TapTwoPlayer : MonoBehaviour
         }
         else if (elapsed >= limitTime)
         {
-            _isRunning = false;
+            // ‚±‚±‚Å‚Í _isRunning ‚ğ false ‚É‚µ‚È‚¢I
             GameUIController.Instance?.ShowFinishText("TIME UP!");
             FinishGame(0, elapsed); // ˆø‚«•ª‚¯
         }
@@ -167,7 +167,7 @@ public class TapTwoPlayer : MonoBehaviour
 
     private void FinishGame(int winner, float time)
     {
-        if (!_isRunning) return;
+        if (!_isRunning) return;   // “ñdŒÄ‚Ño‚µ–h~
         _isRunning = false;
 
         GameResultManager.Instance.SetResult(winner, _player1Count, _player2Count, time);
@@ -178,4 +178,5 @@ public class TapTwoPlayer : MonoBehaviour
             cleaner.MoveToBackupParent();
         }
     }
+
 }

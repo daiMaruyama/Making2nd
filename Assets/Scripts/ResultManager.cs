@@ -27,7 +27,7 @@ public class ResultManager : MonoBehaviour
 
     private void Start()
     {
-        // ResetAllPrefs();
+        // ResetAllPrefs(); // ランキングバグった時用
         if (GameResultManager.Instance == null)
         {
             Debug.LogError("GameResultManager が存在しません！");

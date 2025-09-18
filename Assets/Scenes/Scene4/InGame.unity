@@ -1561,7 +1561,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24b61382733d73c4f9b76aaca926db1a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  targetTapCount: 165
+  targetTapCount: 183
   limitTime: 60
   p1Character: {fileID: 301277623}
   p2Character: {fileID: 1022476141}
