@@ -343,12 +343,13 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 263258003}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bf97b509a6aea4144a99674c96585fd4, type: 3}
+  m_Script: {fileID: 11500000, guid: 8afab57d37f04b44da71b2ad51b4c53f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  autoRotationSpeed: 2
+  shakeAmplitude: 1
+  shakeSpeed: 2
 --- !u!1 &414892483 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5246720945014371493, guid: 7ba7ff6dc87f2a04fb6dfe0c14e1d138, type: 3}
@@ -366,6 +367,7 @@ GameObject:
   - component: {fileID: 554456089}
   - component: {fileID: 554456088}
   - component: {fileID: 554456087}
+  - component: {fileID: 554456090}
   m_Layer: 5
   m_Name: FlowText
   m_TagString: Untagged
@@ -408,7 +410,7 @@ MonoBehaviour:
   _nextSceneName: SelectModeScene
   _panelToFade: {fileID: 414892483}
   _fadeDuration: 40
-  _audioSource: {fileID: 1835690030}
+  _audioSource: {fileID: 554456090}
   _charSound: {fileID: 8300000, guid: cf232e7215b15fc4b9cb7017660b6a98, type: 3}
   _nextArrow: {fileID: 1557194640}
   _blinkInterval: 0.5
@@ -511,6 +513,103 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 554456085}
   m_CullTransparentMesh: 1
+--- !u!82 &554456090
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 554456085}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 8300000, guid: 2e21b0510e47761489a52c9bda83f9e2, type: 3}
+  m_Resource: {fileID: 8300000, guid: 2e21b0510e47761489a52c9bda83f9e2, type: 3}
+  m_PlayOnAwake: 1
+  m_Volume: 0.389
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &1112735587
 GameObject:
   m_ObjectHideFlags: 0
@@ -889,7 +988,7 @@ GameObject:
   - component: {fileID: 1835690031}
   - component: {fileID: 1835690030}
   m_Layer: 0
-  m_Name: GameObject
+  m_Name: BGM
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -905,10 +1004,10 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 6c389da673861ec4f9ecd10495f307a7, type: 3}
-  m_Resource: {fileID: 8300000, guid: 6c389da673861ec4f9ecd10495f307a7, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 2e21b0510e47761489a52c9bda83f9e2, type: 3}
+  m_Resource: {fileID: 8300000, guid: 2e21b0510e47761489a52c9bda83f9e2, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 0.042
+  m_Volume: 0.072
   m_Pitch: 1
   Loop: 0
   Mute: 0
