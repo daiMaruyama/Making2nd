@@ -574,8 +574,7 @@ RectTransform:
   - {fileID: 1679769516}
   - {fileID: 1524822397}
   - {fileID: 1002341600}
-  - {fileID: 685445770}
-  - {fileID: 649920167}
+  - {fileID: 1222982478}
   m_Father: {fileID: 763502900}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -1960,7 +1959,7 @@ GameObject:
   m_Component:
   - component: {fileID: 649920167}
   - component: {fileID: 649920168}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Ori
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1976,11 +1975,11 @@ Transform:
   m_GameObject: {fileID: 649920166}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -92.68211, y: -188.52112, z: 0}
-  m_LocalScale: {x: 0.18562438, y: 0.6644611, z: 0.6644611}
+  m_LocalPosition: {x: -92.68212, y: -188.52113, z: 0}
+  m_LocalScale: {x: 0.18562438, y: 0.66446114, z: 0.66446114}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 237510395}
+  m_Father: {fileID: 1222982478}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &649920168
 SpriteRenderer:
@@ -2027,7 +2026,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 90bcc45f0cdb6ac419c3fb1b00678f80, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.59607846}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -2182,7 +2181,7 @@ GameObject:
   m_Component:
   - component: {fileID: 685445770}
   - component: {fileID: 685445771}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Hiko
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2198,11 +2197,11 @@ Transform:
   m_GameObject: {fileID: 685445769}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -93.77807, y: -186.34238, z: 0}
+  m_LocalPosition: {x: -93.77807, y: -186.34239, z: 0}
   m_LocalScale: {x: 0.13345696, y: 0.47772253, z: 0.47772253}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 237510395}
+  m_Father: {fileID: 1222982478}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &685445771
 SpriteRenderer:
@@ -2249,7 +2248,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: b7dc24bf23b28f347bcb7c9b53be33f5, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.6313726}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -2794,6 +2793,7 @@ GameObject:
   - component: {fileID: 1021836773}
   - component: {fileID: 1021836772}
   - component: {fileID: 1021836775}
+  - component: {fileID: 1021836776}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -2919,6 +2919,19 @@ MonoBehaviour:
     m_MipBias: 0
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
+--- !u!114 &1021836776
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1021836771}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bf97b509a6aea4144a99674c96585fd4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  autoRotationSpeed: 0.4
 --- !u!224 &1063548831 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 794411465198410737, guid: 3826fbccafc96794ab6507482c33f005, type: 3}
@@ -3332,6 +3345,43 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1203966035}
   m_CullTransparentMesh: 1
+--- !u!1 &1222982477
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1222982478}
+  m_Layer: 5
+  m_Name: OriHiko
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1222982478
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1222982477}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 649920167}
+  - {fileID: 685445770}
+  m_Father: {fileID: 237510395}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1271549495
 GameObject:
   m_ObjectHideFlags: 0

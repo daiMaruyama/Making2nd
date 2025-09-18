@@ -19,6 +19,12 @@ public class TitleController : MonoBehaviour
     [SerializeField] private Vector3 centerOffset = new Vector3(0f, 100f, 0f);
     [SerializeField] private Vector3 rightOffset = new Vector3(100f, 100f, 0f);
 
+    [Header("オブジェクト")]
+    [SerializeField] GameObject _object1;
+    [SerializeField] GameObject _object2;
+    [SerializeField] float moveTime = 2f;
+
+
     private bool finished = false;
 
     private void Awake()
@@ -81,7 +87,20 @@ public class TitleController : MonoBehaviour
         leftText.DOFade(0f, 1f);
         centerText.DOFade(0f, 1f);
         rightText.DOFade(0f, 1f);
+
+        if (_object1 != null)
+        {
+            // 左方向に移動して消える
+            _object1.transform.DOLocalMoveX(-Screen.width, moveTime).SetEase(Ease.InQuad);
+        }
+
+        if (_object2 != null)
+        {
+            // 右方向に移動して消える
+            _object2.transform.DOLocalMoveX(Screen.width, moveTime).SetEase(Ease.InQuad);
+        }
     }
+
 
     private void ResetText(TextMeshProUGUI text)
     {
