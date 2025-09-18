@@ -11,6 +11,10 @@ public class GameUIController : MonoBehaviour
     [SerializeField] private TextMeshProUGUI p1RemainingText; // P1Žc‚è‰ñ”
     [SerializeField] private TextMeshProUGUI p2RemainingText; // P2Žc‚è‰ñ”
 
+    [Header("Œø‰Ê‰¹")]
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioClip countdownClip; // 3,2,1,Start —p
+
     private void Awake()
     {
         Instance = this;
@@ -27,6 +31,11 @@ public class GameUIController : MonoBehaviour
         while (count > 0)
         {
             countdownText.text = count.ToString();
+
+            // 3 ‚Ì‚Æ‚«‚¾‚¯Œø‰Ê‰¹‚ð–Â‚ç‚·
+            if (count == 3)
+                audioSource?.PlayOneShot(countdownClip);
+
             yield return new WaitForSeconds(1f);
             count--;
         }
