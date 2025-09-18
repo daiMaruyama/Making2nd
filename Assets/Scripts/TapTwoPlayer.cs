@@ -6,18 +6,14 @@ public class TapTwoPlayer : MonoBehaviour
     public static TapTwoPlayer Instance { get; private set; }
 
     [Header("ゲーム設定")]
-    public int targetTapCount = 20;
+    public int targetTapCount = 20;        // ← そのまま public のまま残す
     [SerializeField] private float limitTime = 10f;
 
     [Header("キャラクター")]
     [SerializeField] private Transform p1Character;
     [SerializeField] private Transform p2Character;
-    [SerializeField] private Transform p1GoalPoint;
-    [SerializeField] private Transform p2GoalPoint;
-
-    [Header("効果音")]
-    [SerializeField] private AudioClip keyTapClip;
-    [SerializeField] private AudioClip timeUpClip;
+    [SerializeField] private Transform p1GoalPoint;   // ← 追加
+    [SerializeField] private Transform p2GoalPoint;   // ← 追加
 
     public bool IsRunning => _isRunning;
     public int Player2Count => _player2Count;
@@ -32,6 +28,9 @@ public class TapTwoPlayer : MonoBehaviour
     private float _startTime;
     private bool _isRunning = false;
 
+    // ===========================
+    // AI設定
+    // ===========================
     private static bool _isAI = false;
     private static bool _isOniMode = false;
     private float _nextAITapTime = 0f;
@@ -87,22 +86,21 @@ public class TapTwoPlayer : MonoBehaviour
 
         UpdateCharacterPositions();
 
+        // 勝敗判定
         if (_player1Count >= targetTapCount)
         {
             GameUIController.Instance?.ShowFinishText("FINISH!");
-            AudioSource.PlayClipAtPoint(timeUpClip, Vector3.zero, 1.3f);
             FinishGame(1, elapsed);
         }
         else if (_player2Count >= targetTapCount)
         {
             GameUIController.Instance?.ShowFinishText("FINISH!");
-            AudioSource.PlayClipAtPoint(timeUpClip, Vector3.zero, 1.3f);
             FinishGame(2, elapsed);
         }
         else if (elapsed >= limitTime)
         {
+            // ここでは _isRunning を false にしない！
             GameUIController.Instance?.ShowFinishText("TIME UP!");
-            AudioSource.PlayClipAtPoint(timeUpClip, Vector3.zero, 1.3f);
             FinishGame(0, elapsed); // 引き分け
         }
     }
@@ -117,7 +115,6 @@ public class TapTwoPlayer : MonoBehaviour
             {
                 _player2Count++;
                 UpdateTapUI();
-                AudioSource.PlayClipAtPoint(keyTapClip, Vector3.zero);
             }
         }
 
@@ -125,7 +122,6 @@ public class TapTwoPlayer : MonoBehaviour
         {
             _player1Count++;
             UpdateTapUI();
-            AudioSource.PlayClipAtPoint(keyTapClip, Vector3.zero);
         }
     }
 
@@ -171,7 +167,7 @@ public class TapTwoPlayer : MonoBehaviour
 
     private void FinishGame(int winner, float time)
     {
-        if (!_isRunning) return;
+        if (!_isRunning) return;   // 二重呼び出し防止
         _isRunning = false;
 
         GameResultManager.Instance.SetResult(winner, _player1Count, _player2Count, time);
@@ -182,4 +178,5 @@ public class TapTwoPlayer : MonoBehaviour
             cleaner.MoveToBackupParent();
         }
     }
+
 }

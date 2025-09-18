@@ -1567,8 +1567,6 @@ MonoBehaviour:
   p2Character: {fileID: 1022476141}
   p1GoalPoint: {fileID: 937501166}
   p2GoalPoint: {fileID: 1834214207}
-  keyTapClip: {fileID: 8300000, guid: 9440f9296c6998c4f8f89bbd02477c19, type: 3}
-  timeUpClip: {fileID: 8300000, guid: 99fac6d007abbb645ac4c1fa2a62108c, type: 3}
 --- !u!1001 &716357376
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -13575,8 +13573,6 @@ MonoBehaviour:
   timerText: {fileID: 1448882261}
   p1RemainingText: {fileID: 743061812}
   p2RemainingText: {fileID: 1998204507}
-  audioSource: {fileID: 298480805}
-  countdownClip: {fileID: 8300000, guid: e3c2d0b202ddc9540a7a74e5ee5b4259, type: 3}
 --- !u!114 &1868166710
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -22034,12 +22030,12 @@ SceneRoots:
   - {fileID: 822759092}
   - {fileID: 884382240}
   - {fileID: 8403646284943284821}
-  - {fileID: 353965848}
-  - {fileID: 637532903}
   - {fileID: 1258759619907419139}
   - {fileID: 5715636161592815017}
   - {fileID: 937501166}
   - {fileID: 1834214207}
+  - {fileID: 353965848}
+  - {fileID: 637532903}
   - {fileID: 634585260}
   - {fileID: 412024368}
   - {fileID: 1686029015}
