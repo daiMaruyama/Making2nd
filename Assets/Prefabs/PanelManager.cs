@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -57,8 +58,13 @@ public class PanelManager : MonoBehaviour
     // ==== ƒQ[ƒ€‘JˆÚ ====
     public void GoToGame(int mode)
     {
-        // mode: 1 = 1lƒVƒ“ƒvƒ‹, 2 = 1l‹S, 3 = 2l‘Îí
         PlayerPrefs.SetInt("GameMode", mode);
+        StartCoroutine(LoadGameAfterDelay(1f)); // 1•b‘Ò‚Á‚Ä‘JˆÚ
+    }
+
+    private IEnumerator LoadGameAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
         SceneManager.LoadScene(ingameSceneName);
     }
 
