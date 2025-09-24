@@ -17,7 +17,7 @@ public class DoTextSample : MonoBehaviour
         if (_testTMP != null)
         {
             _testTMP.text = _text;
-            _testTMP.DOText(_text, 5f);
+            // _testTMP.DOText(_text, 5f);
         }
     }
 }
