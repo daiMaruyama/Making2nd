@@ -15,19 +15,19 @@ public class MaxVisibleCharactersTest : MonoBehaviour
 
     void Start()
     {
+        _text.maxVisibleCharacters = 0;
         if (_text == null)
-            _text = GetComponent<TMP_Text>();
+            Debug.Log("対象テキストをアタッチしてください。");
 
         if (_text != null)
             StartCoroutine(FlowText());
     }
 
-    private IEnumerator FlowText()
+    IEnumerator FlowText()
     {
-        _text.maxVisibleCharacters = 0;
         int totalChars = _text.text.Length;
 
-        for (int i = 1; i <= totalChars; i++)
+        for (int i = 0; i <= totalChars; i++)
         {
             _text.maxVisibleCharacters = i;
             yield return new WaitForSeconds(_delay);
