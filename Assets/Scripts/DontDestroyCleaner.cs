@@ -19,13 +19,13 @@ public class DontDestroyCleaner : MonoBehaviour
             return;
         }
 
-        foreach (var obj in targetObjects)
+        System.Array.ForEach(targetObjects, obj =>
         {
             if (obj != null)
             {
-                obj.transform.SetParent(backupParent, true); // true = ƒ[ƒ‹ƒhÀ•WˆÛ
+                obj.transform.SetParent(backupParent, true);
                 Debug.Log(obj.name + " moved to backup parent.");
             }
-        }
+        });
     }
 }
