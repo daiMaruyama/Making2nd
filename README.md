@@ -1,10 +1,11 @@
 # 🎮 いますぐあなたに会いたいの (Project: Anaai)
 
 **「連打」×「ノベル」**
-単純な「連打アクション」というメカニクスに、リッチなUI演出とストーリー（ノベルパート）を組み合わせることで、**「どこまで没入感のある体験を作れるか」**を検証する実験的プロジェクトです。
+単純な「連打アクション」というメカニクスに、DOTweenを用いたリッチなUI演出とストーリー（ノベルパート）を組み合わせることで、**「どこまで没入感のある体験を作れるか」**を検証した実験的プロジェクトです。
 
 <p align="left">
   <img src="https://img.shields.io/badge/Unity-6000.1.0f1-000000?style=for-the-badge&logo=unity&logoColor=white" />
+  <img src="https://img.shields.io/badge/Tech-DOTween-691564?style=for-the-badge" />
   <img src="https://img.shields.io/badge/Genre-Narrative_Clicker-FF4081?style=for-the-badge" />
 </p>
 
@@ -18,29 +19,36 @@
 
 **"Elevating Simple Mechanics with UX"**
 ゲームシステム自体は「ボタンを連打して走る」という非常にシンプルなものです。
-しかし、そこに**「今すぐヒロインに会いに行かなければならない」**というストーリーの文脈と、感情を揺さぶる**テキスト演出**を乗せることで、単純作業を「焦燥感のあるゲーム体験」へ昇華させることを目指しています。
+しかし、そこに**「今すぐヒロインに会いに行かなければならない」**というストーリーの文脈と、感情を揺さぶる演出を乗せることで、単純作業を「焦燥感のあるゲーム体験」へ昇華させることを目指しています。
 
 ### 🚀 Phase 2: Polish & Refactoring
 本リポジトリ（Making2nd）では、初期プロトタイプからさらに体験の質を高めるため、以下の実装を行っています。
-* **Game Feel**: 連打時のUIフィードバックやパーティクル作成など、「手触り」の強化
+* **Visual Polish**: DOTweenを活用した「気持ちいい」UIモーションの実装
+* **Game Modes**: 1人プレイ（対AI）と2人対戦モードの実装
 * **Narrative UX**: ノベルパートにおけるテキスト表示演出の多様化
-* **Refactoring**: 拡張性を考慮した設計への移行
 
 ---
 
 ## 📝 Technical Highlights
 
-### 💬 感情を伝える「文字送り」システム
-ノベルパートにおいて、プレイヤーを物語に引き込むために**「テキストの表示演出（Typewriter Effect）」**を作り込みました。
-単調な表示を避け、以下の3パターンを実装・比較検証しています。
+### ✨ DOTweenによるUI演出の強化 (Polished UI)
+カジュアルゲームにおいて重要な「触り心地」を追求するため、コードベースで詳細なアニメーション制御を行いました。
+* **Sequence制御**: タイトルロゴや文字演出において、複数のアニメーションを `Sequence` で連結し、ストーリー性を感じる動きを構築。
+* **Ease設定**: 単調な動きにならないようイージング（Ease）を調整し、吸い付くような「手触り」を実現。
 
-1.  **Standard**: 基本的な等速表示
-2.  **Punctuation Wait**: 句読点で一瞬の間を持たせ、読むリズムを作る
-3.  **Emotional**: 感情値に応じて表示速度を動的に変化させる
+### 🤖 ゲームシステムとAIの実装 (Game Logic)
+* **Versus AI**: 1人プレイ時に対戦相手となるAIロジックを構築。ランダム性だけでなく、プレイヤーに程よい緊張感を与えるバランス調整を実施。
+* **Mode Switching**: シングルプレイとローカル2人対戦（2P）の両方に対応するゲームループ設計。
+
+### 💬 感情を伝える「文字送り」システム (Text UX)
+ノベルパートの没入感を高めるため、以下の3パターンの文字送りを実装・検証しました。
+1. **Standard**: 等速表示
+2. **Punctuation Wait**: 句読点の間
+3. **Emotional**: 感情値による速度変化
 
 > **Detailed Article**
 > 
-> 文字送りの実装詳細や、UX比較で得られた知見はNoteにて技術記事として公開しています。
+> 文字送りの実装詳細や、UX比較で得られた知見は技術記事として公開しています。
 > <br>
 > <a href="https://note.com/m4rud/n/nd02a6b4c9b19">
 >   <img src="https://img.shields.io/badge/Note-文字送り3パターンの実装とUX比較-262626?style=for-the-badge&logo=notion&logoColor=white" />
@@ -57,8 +65,15 @@
 
 ---
 
-## 🛠 Usage & Environment
+## 🔗 Links
+
+- **Play on UnityRoom**: [https://unityroom.com/games/anaai_0919](https://unityroom.com/games/anaai_0919)
+
+---
+
+## 🛠 Environment
 
 - **Engine**: Unity 6 (6000.1.0f1)
 - **Language**: C#
 - **IDE**: Visual Studio 2022
+- **Assets**: DOTween
